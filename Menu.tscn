@@ -1,0 +1,159 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Button.gd" type="Script" id=1]
+[ext_resource path="res://RichTextLabel5.gd" type="Script" id=2]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_left = 100.0
+margin_top = 100.0
+margin_right = 300.0
+margin_bottom = 130.0
+text = "Distance between peaks (eg- 500,100)"
+
+[node name="RichTextLabel6" type="RichTextLabel" parent="."]
+margin_left = 400.0
+margin_top = 100.0
+margin_right = 600.0
+margin_bottom = 130.0
+text = "Catcher width (eg- 100,200)"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="."]
+margin_left = 100.0
+margin_top = 200.0
+margin_right = 300.0
+margin_bottom = 230.0
+text = "Std Dev (eg- 100,200)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel7" type="RichTextLabel" parent="."]
+margin_left = 400.0
+margin_top = 200.0
+margin_right = 600.0
+margin_bottom = 230.0
+text = "Payoff (eg- 2,0.5)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="."]
+margin_left = 100.0
+margin_top = 300.0
+margin_right = 300.0
+margin_bottom = 330.0
+text = "Probability of getting left distr. (eg- 50,30,70)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel8" type="RichTextLabel" parent="."]
+margin_left = 400.0
+margin_top = 300.0
+margin_right = 600.0
+margin_bottom = 330.0
+text = "Sample size (eg- 15,20)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel4" type="RichTextLabel" parent="."]
+margin_left = 100.0
+margin_top = 400.0
+margin_right = 300.0
+margin_bottom = 420.0
+text = "Trials/condition"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LineEdit" type="LineEdit" parent="."]
+margin_left = 100.0
+margin_top = 130.0
+margin_right = 300.0
+margin_bottom = 154.0
+
+[node name="LineEdit4" type="LineEdit" parent="."]
+margin_left = 400.0
+margin_top = 130.0
+margin_right = 600.0
+margin_bottom = 154.0
+
+[node name="LineEdit2" type="LineEdit" parent="."]
+margin_left = 100.0
+margin_top = 230.0
+margin_right = 300.0
+margin_bottom = 254.0
+
+[node name="LineEdit5" type="LineEdit" parent="."]
+margin_left = 400.0
+margin_top = 230.0
+margin_right = 600.0
+margin_bottom = 254.0
+
+[node name="LineEdit3" type="LineEdit" parent="."]
+margin_left = 100.0
+margin_top = 330.0
+margin_right = 300.0
+margin_bottom = 354.0
+
+[node name="LineEdit6" type="LineEdit" parent="."]
+margin_left = 400.0
+margin_top = 330.0
+margin_right = 600.0
+margin_bottom = 354.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LineEdit7" type="LineEdit" parent="."]
+margin_left = 650.0
+margin_top = 200.0
+margin_right = 850.0
+margin_bottom = 224.0
+rect_scale = Vector2( 1.5, 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="."]
+margin_left = 100.0
+margin_top = 430.0
+margin_right = 300.0
+margin_bottom = 454.0
+min_value = 1.0
+value = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="."]
+margin_left = 930.0
+margin_top = 543.0
+margin_right = 980.0
+margin_bottom = 563.0
+text = "START"
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel5" type="RichTextLabel" parent="."]
+margin_left = 650.0
+margin_top = 103.0
+margin_right = 830.0
+margin_bottom = 143.0
+rect_scale = Vector2( 2, 2 )
+text = "Please enter your code to start the game:"
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="Button" to="Button" method="_on_Button_pressed"]

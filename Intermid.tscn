@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://IntermidScrn.gd" type="Script" id=1]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_left = 286.0
+margin_top = 146.0
+margin_right = 486.0
+margin_bottom = 206.0
+rect_scale = Vector2( 2, 2 )
+text = "Now, you get a smaller catcher to play the same game."
+
+[node name="ButtonIntermed" type="Button" parent="."]
+margin_left = 392.862
+margin_top = 281.738
+margin_right = 442.862
+margin_bottom = 301.738
+text = "START"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="ButtonIntermed" to="." method="_on_ButtonIntermed_pressed"]

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/mixkit-coins-handling-1939.wav-e0f2fb5503bb32617f94966482056323.sample"
+
+[deps]
+
+source_file="res://mixkit-coins-handling-1939.wav"
+dest_files=[ "res://.import/mixkit-coins-handling-1939.wav-e0f2fb5503bb32617f94966482056323.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

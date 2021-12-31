@@ -1,0 +1,70 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Button1.gd" type="Script" id=1]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_left = 100.0
+margin_top = 100.0
+margin_right = 350.0
+margin_bottom = 120.0
+text = "Screen resolution height (pixels)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="."]
+margin_left = 100.0
+margin_top = 200.0
+margin_right = 350.0
+margin_bottom = 220.0
+text = "Screen resolution width (pixels)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="."]
+margin_left = 100.0
+margin_top = 300.0
+margin_right = 350.0
+margin_bottom = 320.0
+text = "Screen diagonal length (inches)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LineEdit" type="LineEdit" parent="."]
+margin_left = 100.0
+margin_top = 130.0
+margin_right = 300.0
+margin_bottom = 154.0
+
+[node name="LineEdit2" type="LineEdit" parent="."]
+margin_left = 100.0
+margin_top = 230.0
+margin_right = 300.0
+margin_bottom = 254.0
+
+[node name="LineEdit3" type="LineEdit" parent="."]
+margin_left = 100.0
+margin_top = 330.0
+margin_right = 300.0
+margin_bottom = 354.0
+
+[node name="Button" type="Button" parent="."]
+margin_left = 770.0
+margin_top = 543.0
+margin_right = 970.0
+margin_bottom = 563.0
+text = "NEXT"
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="Button" to="Button" method="_on_Button_pressed"]

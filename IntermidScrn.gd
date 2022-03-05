@@ -17,11 +17,13 @@ func _ready():
 
 
 func _on_ButtonIntermed_pressed():
-	global.disArr = ["500", "0"]
+	global.disArr = ["500", "0", "666"]
 	#std dev is doubled if the distance between peaks is 0
+	#separate logic if distance >= 600
 	global.devArr = ["83"]
 	global.proArr = ["50"]
-	global.catArr = ["332", "832"]
+	#global.catArr = ["332", "832"]
+	global.catArr = ["100"]
 	global.payArr = ["1"]
 	global.samArr = ["20"]
 	global.trials = 20

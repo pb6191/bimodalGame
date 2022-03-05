@@ -16,7 +16,7 @@ margin_top = 146.0
 margin_right = 486.0
 margin_bottom = 206.0
 rect_scale = Vector2( 2, 2 )
-text = "Now, you get a smaller catcher to play the same game."
+text = "Now, the game gets more interesting."
 
 [node name="ButtonIntermed" type="Button" parent="."]
 margin_left = 392.862

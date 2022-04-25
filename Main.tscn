@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://tracepixel.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://mixkit-video-game-win-2016.ogg" type="AudioStream" id=4]
 [ext_resource path="res://mixkit-retro-arcade-lose-2027.ogg" type="AudioStream" id=5]
 [ext_resource path="res://mixkit-coins-handling-1939.wav" type="AudioStream" id=6]
+[ext_resource path="res://catcher_buttongroup.tres" type="ButtonGroup" id=7]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 1 )
@@ -40,7 +41,7 @@ __meta__ = {
 
 [node name="RichTextLabel3" type="RichTextLabel" parent="."]
 margin_top = 550.0
-margin_right = 200.0
+margin_right = 300.0
 margin_bottom = 590.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -81,7 +82,92 @@ stream = ExtResource( 6 )
 [node name="Catcher" type="Node" parent="."]
 
 [node name="Catcher2" type="Node" parent="."]
+
+[node name="RichTextLabel4" type="RichTextLabel" parent="."]
+visible = false
+margin_left = 100.0
+margin_top = 100.0
+margin_right = 400.0
+margin_bottom = 115.0
+rect_scale = Vector2( 2, 2 )
+text = "Input the number of modes that you see here:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel5" type="RichTextLabel" parent="."]
+visible = false
+margin_left = 100.0
+margin_top = 100.0
+margin_right = 250.0
+margin_bottom = 115.0
+rect_scale = Vector2( 2, 2 )
+text = "Adjust Catcher Width:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="."]
+visible = false
+margin_left = 100.0
+margin_top = 130.0
+margin_right = 174.0
+margin_bottom = 154.0
+rect_scale = Vector2( 2, 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CheckBox" type="CheckBox" parent="."]
+visible = false
+margin_left = 100.0
+margin_top = 130.0
+margin_right = 318.0
+margin_bottom = 154.0
+rect_scale = Vector2( 1.5, 1.5 )
+group = ExtResource( 7 )
+text = "Catcher Width 150, Cost $150"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CheckBox2" type="CheckBox" parent="."]
+visible = false
+margin_left = 100.0
+margin_top = 160.0
+margin_right = 318.0
+margin_bottom = 184.0
+rect_scale = Vector2( 1.5, 1.5 )
+group = ExtResource( 7 )
+text = "Catcher Width 300, Cost $250"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CheckBox3" type="CheckBox" parent="."]
+visible = false
+margin_left = 100.0
+margin_top = 190.0
+margin_right = 318.0
+margin_bottom = 214.0
+rect_scale = Vector2( 1.5, 1.5 )
+group = ExtResource( 7 )
+text = "Catcher Width 450, Cost $300"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="button_down" from="Button" to="." method="_on_Button_button_down"]
 [connection signal="mouse_entered" from="Button" to="." method="_on_Button_mouse_entered"]
 [connection signal="mouse_exited" from="Button" to="." method="_on_Button_mouse_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[connection signal="mouse_entered" from="RichTextLabel5" to="." method="_on_RichTextLabel5_mouse_entered"]
+[connection signal="mouse_exited" from="RichTextLabel5" to="." method="_on_RichTextLabel5_mouse_exited"]
+[connection signal="button_down" from="CheckBox" to="." method="_on_CheckBox_button_down"]
+[connection signal="mouse_entered" from="CheckBox" to="." method="_on_CheckBox_mouse_entered"]
+[connection signal="mouse_exited" from="CheckBox" to="." method="_on_CheckBox_mouse_exited"]
+[connection signal="button_down" from="CheckBox2" to="." method="_on_CheckBox2_button_down"]
+[connection signal="mouse_entered" from="CheckBox2" to="." method="_on_CheckBox2_mouse_entered"]
+[connection signal="mouse_exited" from="CheckBox2" to="." method="_on_CheckBox2_mouse_exited"]
+[connection signal="button_down" from="CheckBox3" to="." method="_on_CheckBox3_button_down"]
+[connection signal="mouse_entered" from="CheckBox3" to="." method="_on_CheckBox3_mouse_entered"]
+[connection signal="mouse_exited" from="CheckBox3" to="." method="_on_CheckBox3_mouse_exited"]

@@ -29,10 +29,13 @@ var rng = RandomNumberGenerator.new()
 var tempOdd
 var tempIndex
 var tempX
+var SDmultiplierUnimodal=1
 
 var txt1 = "Start Trial"
+var txt1mid = "Answer Question"
 var txt2 = "Adjust Catcher"
 var txt3 = "See Result"
+var txt3mid = "Display Graph"
 var freshPress = false
 
 var traceFolder
@@ -46,19 +49,39 @@ var temp3
 var temp4
 var catchersp2
 var catchersp3
+var startingCatcherWidth
+var catcherCost
 
 var readyclick = 0
 var catcheroutside = 0
 var offset
 var numcatchers
+var modesSaid
 var greenlist
+var drawGraph = false
+
+func _draw():
+	if drawGraph == true:
+		var drawing = PoolVector2Array()
+		var yPoint
+		for i in range(-1000, 1000):
+			yPoint = 200-(30000*(0.5*(1/(FULLdevArr1[FULLindexArr1[trialNum]]*1.41421*1.77245))*(pow(2.71828, (-0.5*(pow(((i-(FULLdisArr1[FULLindexArr1[trialNum]]/2))/FULLdevArr1[FULLindexArr1[trialNum]]), 2))))) + 0.5*(1/(FULLdevArr1[FULLindexArr1[trialNum]]*1.41421*1.77245))*(pow(2.71828, (-0.5*(pow(((i+(FULLdisArr1[FULLindexArr1[trialNum]]/2))/FULLdevArr1[FULLindexArr1[trialNum]]), 2)))))))
+			drawing.push_back(Vector2(i+offset, yPoint))
+		for index_point in range(1999):
+			draw_line(drawing[index_point], drawing[index_point + 1], Color(1, 1, 1, 1))
+
+func sum(arr:Array):
+	var result = 0
+	for i in arr:
+		result+=i
+	return result
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	global.playItertn += 1
 	if (global.back2backDesign == 1):
 		if global.playItertn == 1:
-			global.win = 0
+			global.win = 1000
 	else:
 		global.win = 0
 	traceFolderName = generate_word(characters, 10)
@@ -70,20 +93,36 @@ func _ready():
 	payArr1 = global.payArr
 	samArr1 = global.samArr
 	trials1 = global.trials
-	totalTrials = len(disArr1)*len(devArr1)*len(proArr1)*len(catArr1)*len(payArr1)*len(samArr1)*trials1
-	for i1 in int(trials1):
+	if typeof(trials1) == TYPE_INT:
+		totalTrials = len(disArr1)*len(devArr1)*len(proArr1)*len(catArr1)*len(payArr1)*len(samArr1)*trials1
+		for i1 in int(trials1):
+			for i2 in len(disArr1):
+				for i3 in len(devArr1):
+					for i4 in len(proArr1):
+						for i5 in len(catArr1):
+							for i6 in len(payArr1):
+								for i7 in len(samArr1):
+									FULLdisArr1.push_back(float(disArr1[i2]))
+									FULLdevArr1.push_back(float(devArr1[i3]))
+									FULLproArr1.push_back(float(proArr1[i4]))
+									FULLcatArr1.push_back(float(catArr1[i5]))
+									FULLpayArr1.push_back(float(payArr1[i6]))
+									FULLsamArr1.push_back(float(samArr1[i7]))
+	if typeof(trials1) == TYPE_ARRAY:
+		totalTrials = len(devArr1)*len(proArr1)*len(catArr1)*len(payArr1)*len(samArr1)*sum(trials1)
 		for i2 in len(disArr1):
-			for i3 in len(devArr1):
-				for i4 in len(proArr1):
-					for i5 in len(catArr1):
-						for i6 in len(payArr1):
-							for i7 in len(samArr1):
-								FULLdisArr1.push_back(float(disArr1[i2]))
-								FULLdevArr1.push_back(float(devArr1[i3]))
-								FULLproArr1.push_back(float(proArr1[i4]))
-								FULLcatArr1.push_back(float(catArr1[i5]))
-								FULLpayArr1.push_back(float(payArr1[i6]))
-								FULLsamArr1.push_back(float(samArr1[i7]))
+			for i1 in int(trials1[i2]):
+				for i3 in len(devArr1):
+					for i4 in len(proArr1):
+						for i5 in len(catArr1):
+							for i6 in len(payArr1):
+								for i7 in len(samArr1):
+									FULLdisArr1.push_back(float(disArr1[i2]))
+									FULLdevArr1.push_back(float(devArr1[i3]))
+									FULLproArr1.push_back(float(proArr1[i4]))
+									FULLcatArr1.push_back(float(catArr1[i5]))
+									FULLpayArr1.push_back(float(payArr1[i6]))
+									FULLsamArr1.push_back(float(samArr1[i7]))
 	for i8 in int(totalTrials):
 		FULLindexArr1.push_back(i8)
 	for k in int(totalTrials):
@@ -110,14 +149,14 @@ func _process(delta):
 		#	$"Sprite3".position.x -=1
 		if InputEventMouseMotion:
 			if catcheroutside == 0:
-				$"Sprite2".position.x = get_global_mouse_position().x - int(FULLcatArr1[FULLindexArr1[trialNum]]/2)
-				$"Sprite3".position.x = get_global_mouse_position().x + int(FULLcatArr1[FULLindexArr1[trialNum]]/2)
+				$"Sprite2".position.x = get_global_mouse_position().x - startingCatcherWidth
+				$"Sprite3".position.x = get_global_mouse_position().x + startingCatcherWidth
 			else:
 				$"Sprite2".position.x = -20
 				$"Sprite3".position.x = -20
 		if Input.is_action_just_pressed("lmb"):
 			readyclick = 1
-		if Input.is_action_just_released("lmb") and readyclick == 1:
+		if Input.is_action_just_released("lmb") and readyclick == 1 and !($"Sprite3".position.x<0):
 			readyclick = 0
 			spawnOneCatcher()
 
@@ -132,12 +171,12 @@ func getX():
 	if FULLdisArr1[FULLindexArr1[trialNum]] < 600:
 		if rng3.randi_range(1, 100) <= FULLproArr1[FULLindexArr1[trialNum]]:
 			if (global.back2backDesign == 1 and int(FULLdisArr1[FULLindexArr1[trialNum]]) == 0):
-				tempX = offset + int(rng2.randfn(0.0, (2*FULLdevArr1[FULLindexArr1[trialNum]]))) - int(FULLdisArr1[FULLindexArr1[trialNum]]/2)
+				tempX = offset + int(rng2.randfn(0.0, (SDmultiplierUnimodal*FULLdevArr1[FULLindexArr1[trialNum]]))) - int(FULLdisArr1[FULLindexArr1[trialNum]]/2)
 			else:
 				tempX = offset + int(rng2.randfn(0.0, FULLdevArr1[FULLindexArr1[trialNum]])) - int(FULLdisArr1[FULLindexArr1[trialNum]]/2)
 		else:
 			if (global.back2backDesign == 1 and int(FULLdisArr1[FULLindexArr1[trialNum]]) == 0):
-				tempX = offset + int(rng2.randfn(0.0, (2*FULLdevArr1[FULLindexArr1[trialNum]]))) + int(FULLdisArr1[FULLindexArr1[trialNum]]/2)
+				tempX = offset + int(rng2.randfn(0.0, (SDmultiplierUnimodal*FULLdevArr1[FULLindexArr1[trialNum]]))) + int(FULLdisArr1[FULLindexArr1[trialNum]]/2)
 			else:
 				tempX = offset + int(rng2.randfn(0.0, FULLdevArr1[FULLindexArr1[trialNum]])) + int(FULLdisArr1[FULLindexArr1[trialNum]]/2)
 	else:
@@ -184,7 +223,7 @@ func spawnOne():
 		else:
 			$"AudioStreamPlayerL".play()
 			temp2.modulate = Color( 1, 0, 0, 1 )
-		$"RichTextLabel2".text = "Total Winnings: "+str(global.win)
+		$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 		get_node("Node/"+traceFolderName).add_child(temp2)
 
 func spawnModes():
@@ -199,7 +238,9 @@ func spawnModes():
 			temp4 = $"Spritedot".duplicate()
 			temp4.set_name(generate_word(characters, 10))
 			temp4.position.x = offset + int(FULLdisArr1[FULLindexArr1[trialNum]]/2)
-			if (numcatchers == 3 and temp2.position.x in greenlist and temp3.position.x in greenlist and temp4.position.x in greenlist):
+			# replacing numcatchers with modesSaid
+			#if (numcatchers == 3 and temp2.position.x in greenlist and temp3.position.x in greenlist and temp4.position.x in greenlist):
+			if (modesSaid == 3 and temp2.position.x in greenlist and temp3.position.x in greenlist and temp4.position.x in greenlist):
 				global.win += FULLpayArr1[FULLindexArr1[trialNum]]
 				$"AudioStreamPlayerW".play()
 				temp2.modulate = Color( 0, 1, 0, 1 )
@@ -210,7 +251,7 @@ func spawnModes():
 				temp2.modulate = Color( 1, 0, 0, 1 )
 				temp3.modulate = Color( 1, 0, 0, 1 )
 				temp4.modulate = Color( 1, 0, 0, 1 )
-			$"RichTextLabel2".text = "Total Winnings: "+str(global.win)
+			$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 			get_node("Node/"+traceFolderName).add_child(temp2)
 			get_node("Node/"+traceFolderName).add_child(temp3)
 			get_node("Node/"+traceFolderName).add_child(temp4)
@@ -219,14 +260,16 @@ func spawnModes():
 			temp2 = $"Spritedot".duplicate()
 			temp2.set_name(generate_word(characters, 10))
 			temp2.position.x = offset
-			if (numcatchers == 1 and temp2.position.x in greenlist):
+			# replacing numcatchers with modesSaid
+			#if (numcatchers == 1 and temp2.position.x in greenlist):
+			if (modesSaid == 1 and temp2.position.x in greenlist):
 				global.win += FULLpayArr1[FULLindexArr1[trialNum]]
 				$"AudioStreamPlayerW".play()
 				temp2.modulate = Color( 0, 1, 0, 1 )
 			else:
 				$"AudioStreamPlayerL".play()
 				temp2.modulate = Color( 1, 0, 0, 1 )
-			$"RichTextLabel2".text = "Total Winnings: "+str(global.win)
+			$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 			get_node("Node/"+traceFolderName).add_child(temp2)
 	else:
 		if has_node("Spritedot"):
@@ -236,7 +279,9 @@ func spawnModes():
 			temp4 = $"Spritedot".duplicate()
 			temp4.set_name(generate_word(characters, 10))
 			temp4.position.x = offset + int(FULLdisArr1[FULLindexArr1[trialNum]]/2)
-			if (numcatchers == 2 and temp3.position.x in greenlist and temp4.position.x in greenlist):
+			# replacing numcatchers with modesSaid
+			#if (numcatchers == 2 and temp3.position.x in greenlist and temp4.position.x in greenlist):
+			if (modesSaid == 2 and temp3.position.x in greenlist and temp4.position.x in greenlist):
 				global.win += FULLpayArr1[FULLindexArr1[trialNum]]
 				$"AudioStreamPlayerW".play()
 				temp3.modulate = Color( 0, 1, 0, 1 )
@@ -245,11 +290,13 @@ func spawnModes():
 				$"AudioStreamPlayerL".play()
 				temp3.modulate = Color( 1, 0, 0, 1 )
 				temp4.modulate = Color( 1, 0, 0, 1 )
-			$"RichTextLabel2".text = "Total Winnings: "+str(global.win)
+			$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 			get_node("Node/"+traceFolderName).add_child(temp3)
 			get_node("Node/"+traceFolderName).add_child(temp4)
 
 func spawnOneCatcher():
+	global.win -= catcherCost
+	$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 	print("catcher placed")
 	numcatchers += 1
 	for n1 in range($"Sprite2".position.x, $"Sprite3".position.x):
@@ -266,12 +313,15 @@ func spawnOneCatcher():
 func _on_Button_pressed():
 	if $"Button".text == txt1 and freshPress == true:
 		freshPress = false
+		drawGraph = false
+		$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
+		update()
 		trialNum +=1
 		#rng4.randomize()
 		rng4.seed
 		offset = 500 + rng4.randi_range(-35, 35)
 		$"RichTextLabel".text = "Trial Number "+str(trialNum+1)+" of "+str(totalTrials)
-		$"RichTextLabel3".text = "Payoff for this trial: "+str(FULLpayArr1[FULLindexArr1[trialNum]])
+		$"RichTextLabel3".text = "You get following dollar amount on winning this trial: "+str(FULLpayArr1[FULLindexArr1[trialNum]])
 		$"Sprite2".visible = false
 		$"Sprite3".visible = false
 		for i4 in $"Catcher".get_children():
@@ -296,25 +346,54 @@ func _on_Button_pressed():
 		numcatchers = 0
 		greenlist = []
 		$"AudioStreamPlayerS".play()
+		$"Button".text = txt1mid
+	if $"Button".text == txt1mid and freshPress == true:
+		freshPress = false
+		$"RichTextLabel4".visible = true
+		modesSaid = 0
+		$"SpinBox".value = 0
+		$"SpinBox".visible = true
 		$"Button".text = txt2
 	if $"Button".text == txt2 and freshPress == true:
 		freshPress = false
+		modesSaid = $"SpinBox".value
+		$"RichTextLabel4".visible = false
+		$"SpinBox".visible = false
+		$"RichTextLabel5".visible = true
+		$"CheckBox".pressed = true
+		$"CheckBox".visible = true
+		$"CheckBox2".visible = true
+		$"CheckBox3".visible = true
 		var randPosnCatcher = (randi() % 1000) + 1
-		$"Sprite2".position.x = randPosnCatcher - int(FULLcatArr1[FULLindexArr1[trialNum]]/2)
-		$"Sprite3".position.x = randPosnCatcher + int(FULLcatArr1[FULLindexArr1[trialNum]]/2)
+		startingCatcherWidth = int(FULLcatArr1[FULLindexArr1[trialNum]]/2)
+		catcherCost = 150
+		$"Sprite2".position.x = randPosnCatcher - startingCatcherWidth
+		$"Sprite3".position.x = randPosnCatcher + startingCatcherWidth
 		$"Sprite2".visible = true
 		$"Sprite3".visible = true
 		$"Button".text = txt3
 	if $"Button".text == txt3 and freshPress == true:
 		freshPress = false
+		$"RichTextLabel5".visible = false
+		$"CheckBox".visible = false
+		$"CheckBox2".visible = false
+		$"CheckBox3".visible = false
 		#spawnOne()
+		#spawn modes as solution rather than a point from the distribution
 		spawnModes()
+		$"Button".text = txt3mid
+	if $"Button".text == txt3mid and freshPress == true:
+		freshPress = false
+		drawGraph = true
+		update()
 		if (trialNum+1)==totalTrials:
 			$"Button".text = "Main Screen"
 		else:
 			$"Button".text = txt1
 	if $"Button".text == "Main Screen" and freshPress == true:
 		freshPress = false
+		drawGraph = false
+		update()
 		if (global.back2backDesign == 1):
 			if global.playItertn == 1:
 				get_tree().change_scene("res://Intermid.tscn")
@@ -342,3 +421,50 @@ func _on_Button_mouse_entered():
 
 func _on_Button_mouse_exited():
 	catcheroutside = 0
+
+
+func _on_RichTextLabel5_mouse_entered():
+	catcheroutside = 1
+
+
+func _on_RichTextLabel5_mouse_exited():
+	catcheroutside = 0
+
+
+func _on_CheckBox_mouse_entered():
+	catcheroutside = 1
+
+
+func _on_CheckBox_mouse_exited():
+	catcheroutside = 0
+
+
+func _on_CheckBox2_mouse_entered():
+	catcheroutside = 1
+
+
+func _on_CheckBox2_mouse_exited():
+	catcheroutside = 0
+
+
+func _on_CheckBox3_mouse_entered():
+	catcheroutside = 1
+
+
+func _on_CheckBox3_mouse_exited():
+	catcheroutside = 0
+
+
+func _on_CheckBox_button_down():
+	startingCatcherWidth = int(150/2)
+	catcherCost = 150
+
+
+func _on_CheckBox2_button_down():
+	startingCatcherWidth = int(300/2)
+	catcherCost = 250
+
+
+func _on_CheckBox3_button_down():
+	startingCatcherWidth = int(450/2)
+	catcherCost = 300

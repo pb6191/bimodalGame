@@ -16,3 +16,6 @@ margin_right = 485.105
 margin_bottom = 260.001
 rect_scale = Vector2( 2, 2 )
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

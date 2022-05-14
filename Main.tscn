@@ -87,10 +87,10 @@ stream = ExtResource( 6 )
 visible = false
 margin_left = 100.0
 margin_top = 100.0
-margin_right = 400.0
-margin_bottom = 115.0
-rect_scale = Vector2( 2, 2 )
-text = "Input the number of modes that you see here:"
+margin_right = 600.0
+margin_bottom = 120.0
+rect_scale = Vector2( 1.5, 1.5 )
+text = "Input the number of distributions that you think these points came from:"
 __meta__ = {
 "_edit_use_anchors_": false
 }

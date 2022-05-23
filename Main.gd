@@ -381,7 +381,13 @@ func _on_Button_pressed():
 		#spawnOne()
 		#spawn modes as solution rather than a point from the distribution
 		spawnModes()
-		$"Button".text = txt3mid
+		if global.playItertn == 1:
+			$"Button".text = txt3mid
+		else:
+			if (trialNum+1)==totalTrials:
+				$"Button".text = "Main Screen"
+			else:
+				$"Button".text = txt1
 	if $"Button".text == txt3mid and freshPress == true:
 		freshPress = false
 		drawGraph = true

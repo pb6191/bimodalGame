@@ -156,4 +156,12 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="RichTextLabel9" type="RichTextLabel" parent="."]
+margin_left = 615.0
+margin_top = 268.0
+margin_right = 815.0
+margin_bottom = 368.0
+rect_scale = Vector2( 2, 2 )
+text = "Only 1 of the trials is real. That trial will be randomly determined and your performance on only that trial matters."
 [connection signal="pressed" from="Button" to="Button" method="_on_Button_pressed"]

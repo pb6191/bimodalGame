@@ -18,14 +18,16 @@ texture = ExtResource( 2 )
 
 [node name="Sprite2" type="Sprite" parent="."]
 visible = false
+modulate = Color( 0.901961, 0.952941, 0, 1 )
 position = Vector2( 525, 300 )
-scale = Vector2( 1, 600 )
+scale = Vector2( 1, 100 )
 texture = ExtResource( 2 )
 
 [node name="Sprite3" type="Sprite" parent="."]
 visible = false
+modulate = Color( 0.901961, 0.952941, 0, 1 )
 position = Vector2( 600, 300 )
-scale = Vector2( 1, 600 )
+scale = Vector2( 1, 100 )
 texture = ExtResource( 2 )
 
 [node name="Node" type="Node" parent="."]
@@ -57,6 +59,7 @@ __meta__ = {
 }
 
 [node name="RichTextLabel2" type="RichTextLabel" parent="."]
+visible = false
 margin_left = 800.0
 margin_top = 550.0
 margin_right = 1000.0
@@ -118,6 +121,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="SpinBox2" type="SpinBox" parent="."]
+visible = false
+margin_left = 100.0
+margin_top = 130.0
+margin_right = 174.0
+margin_bottom = 154.0
+rect_scale = Vector2( 2, 2 )
+min_value = 1.0
+max_value = 1000.0
+value = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="CheckBox" type="CheckBox" parent="."]
 visible = false
 margin_left = 100.0
@@ -162,6 +179,8 @@ __meta__ = {
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="mouse_entered" from="RichTextLabel5" to="." method="_on_RichTextLabel5_mouse_entered"]
 [connection signal="mouse_exited" from="RichTextLabel5" to="." method="_on_RichTextLabel5_mouse_exited"]
+[connection signal="mouse_entered" from="SpinBox2" to="." method="_on_SpinBox2_mouse_entered"]
+[connection signal="mouse_exited" from="SpinBox2" to="." method="_on_SpinBox2_mouse_exited"]
 [connection signal="button_down" from="CheckBox" to="." method="_on_CheckBox_button_down"]
 [connection signal="mouse_entered" from="CheckBox" to="." method="_on_CheckBox_mouse_entered"]
 [connection signal="mouse_exited" from="CheckBox" to="." method="_on_CheckBox_mouse_exited"]

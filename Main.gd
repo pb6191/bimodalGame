@@ -49,7 +49,7 @@ var temp3
 var temp4
 var catchersp2
 var catchersp3
-var startingCatcherWidth
+var startingCatcherWidth = 0
 var catcherCost
 
 var readyclick = 0
@@ -59,6 +59,10 @@ var numcatchers
 var modesSaid
 var greenlist
 var drawGraph = false
+
+var changeWidth = 0
+var payoffTrial = 1000
+
 
 func _draw():
 	if drawGraph == true:
@@ -75,6 +79,7 @@ func sum(arr:Array):
 	for i in arr:
 		result+=i
 	return result
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -159,6 +164,13 @@ func _process(delta):
 		if Input.is_action_just_released("lmb") and readyclick == 1 and !($"Sprite3".position.x<0):
 			readyclick = 0
 			spawnOneCatcher()
+		if changeWidth == 1:
+			startingCatcherWidth = int($"SpinBox2".value / 2)
+			$"RichTextLabel2".visible = true
+			$"RichTextLabel2".text = "On placing new catcher, payoff per caught point will be: "+str(payoffTrial-int($"SpinBox2".value / 2)*2)
+	else:
+		$"RichTextLabel2".visible = false
+
 
 func getX():
 	rng2.randomize()
@@ -223,8 +235,24 @@ func spawnOne():
 		else:
 			$"AudioStreamPlayerL".play()
 			temp2.modulate = Color( 1, 0, 0, 1 )
-		$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
+		#$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 		get_node("Node/"+traceFolderName).add_child(temp2)
+
+func spawnTen():
+	for abc in 10:
+		if has_node("Spritedot"):
+			temp2 = $"Spritedot".duplicate()
+			temp2.set_name(generate_word(characters, 10))
+			temp2.position.x = getX()
+			if (temp2.position.x in greenlist):
+				global.win += FULLpayArr1[FULLindexArr1[trialNum]]
+				temp2.modulate = Color( 0, 1, 0, 1 )
+			else:
+				temp2.modulate = Color( 1, 0, 0, 1 )
+			temp2.scale.y = 0.012
+			#$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
+			get_node("Node/"+traceFolderName).add_child(temp2)
+
 
 func spawnModes():
 	if FULLdisArr1[FULLindexArr1[trialNum]] >= 600:
@@ -251,7 +279,7 @@ func spawnModes():
 				temp2.modulate = Color( 1, 0, 0, 1 )
 				temp3.modulate = Color( 1, 0, 0, 1 )
 				temp4.modulate = Color( 1, 0, 0, 1 )
-			$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
+			#$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 			get_node("Node/"+traceFolderName).add_child(temp2)
 			get_node("Node/"+traceFolderName).add_child(temp3)
 			get_node("Node/"+traceFolderName).add_child(temp4)
@@ -269,7 +297,7 @@ func spawnModes():
 			else:
 				$"AudioStreamPlayerL".play()
 				temp2.modulate = Color( 1, 0, 0, 1 )
-			$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
+			#$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 			get_node("Node/"+traceFolderName).add_child(temp2)
 	else:
 		if has_node("Spritedot"):
@@ -290,17 +318,19 @@ func spawnModes():
 				$"AudioStreamPlayerL".play()
 				temp3.modulate = Color( 1, 0, 0, 1 )
 				temp4.modulate = Color( 1, 0, 0, 1 )
-			$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
+			#$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 			get_node("Node/"+traceFolderName).add_child(temp3)
 			get_node("Node/"+traceFolderName).add_child(temp4)
 
 func spawnOneCatcher():
 	global.win -= catcherCost
-	$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
+	#$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 	print("catcher placed")
 	numcatchers += 1
 	for n1 in range($"Sprite2".position.x, $"Sprite3".position.x):
 		greenlist.append(n1)
+	payoffTrial = 1000 - greenlist.size()
+	$"RichTextLabel3".text = "Current Payoff per caught point: "+str(payoffTrial)
 	if has_node("Sprite2"):
 		catchersp2 = $"Sprite2".duplicate()
 		catchersp2.set_name(generate_word(characters, 10))
@@ -312,16 +342,18 @@ func spawnOneCatcher():
 
 func _on_Button_pressed():
 	if $"Button".text == txt1 and freshPress == true:
+		payoffTrial = 1000
 		freshPress = false
 		drawGraph = false
-		$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
+		#$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 		update()
 		trialNum +=1
 		#rng4.randomize()
 		rng4.seed
 		offset = 500 + rng4.randi_range(-35, 35)
 		$"RichTextLabel".text = "Trial Number "+str(trialNum+1)+" of "+str(totalTrials)
-		$"RichTextLabel3".text = "You get following dollar amount on winning this trial: "+str(FULLpayArr1[FULLindexArr1[trialNum]])
+		#$"RichTextLabel3".text = "You get following dollar amount on winning this trial: "+str(FULLpayArr1[FULLindexArr1[trialNum]])
+		$"RichTextLabel3".text = "Current Payoff per caught point: "+str(payoffTrial)
 		$"Sprite2".visible = false
 		$"Sprite3".visible = false
 		for i4 in $"Catcher".get_children():
@@ -360,10 +392,13 @@ func _on_Button_pressed():
 		$"RichTextLabel4".visible = false
 		$"SpinBox".visible = false
 		$"RichTextLabel5".visible = true
-		$"CheckBox".pressed = true
-		$"CheckBox".visible = true
-		$"CheckBox2".visible = true
-		$"CheckBox3".visible = true
+		$"SpinBox2".value = 150
+		$"SpinBox2".visible = true
+		changeWidth = 1
+		#$"CheckBox".pressed = true
+		#$"CheckBox".visible = true
+		#$"CheckBox2".visible = true
+		#$"CheckBox3".visible = true
 		var randPosnCatcher = (randi() % 1000) + 1
 		startingCatcherWidth = int(FULLcatArr1[FULLindexArr1[trialNum]]/2)
 		catcherCost = 150
@@ -375,12 +410,16 @@ func _on_Button_pressed():
 	if $"Button".text == txt3 and freshPress == true:
 		freshPress = false
 		$"RichTextLabel5".visible = false
-		$"CheckBox".visible = false
-		$"CheckBox2".visible = false
-		$"CheckBox3".visible = false
+		$"SpinBox2".visible = false
+		#$"CheckBox".visible = false
+		#$"CheckBox2".visible = false
+		#$"CheckBox3".visible = false
+		
 		#spawnOne()
 		#spawn modes as solution rather than a point from the distribution
-		spawnModes()
+		#spawnModes()
+		#spawn 10 pts of distribution
+		spawnTen()
 		if global.playItertn == 1:
 			$"Button".text = txt3mid
 		else:
@@ -474,3 +513,11 @@ func _on_CheckBox2_button_down():
 func _on_CheckBox3_button_down():
 	startingCatcherWidth = int(450/2)
 	catcherCost = 300
+
+
+func _on_SpinBox2_mouse_entered():
+	catcheroutside = 1
+
+
+func _on_SpinBox2_mouse_exited():
+	catcheroutside = 0

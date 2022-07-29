@@ -11,12 +11,14 @@ __meta__ = {
 }
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
-margin_left = 286.0
-margin_top = 146.0
-margin_right = 486.0
-margin_bottom = 206.0
+margin_left = 100.0
+margin_top = 100.0
+margin_right = 500.0
+margin_bottom = 180.0
 rect_scale = Vector2( 2, 2 )
-text = "Now, the game gets more interesting."
+text = "Now, the game gets more interesting.
+
+Remember, only 1 of the upcoming trials matters and you will be paid for your performance on that trial."
 
 [node name="ButtonIntermed" type="Button" parent="."]
 margin_left = 392.862

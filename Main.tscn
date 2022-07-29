@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://tracepixel.png" type="Texture" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://mixkit-retro-arcade-lose-2027.ogg" type="AudioStream" id=5]
 [ext_resource path="res://mixkit-coins-handling-1939.wav" type="AudioStream" id=6]
 [ext_resource path="res://catcher_buttongroup.tres" type="ButtonGroup" id=7]
+[ext_resource path="res://pngfind.com-white-circles-png-3619117.png" type="Texture" id=8]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 1 )
@@ -21,6 +22,18 @@ visible = false
 modulate = Color( 0.901961, 0.952941, 0, 1 )
 position = Vector2( 525, 300 )
 scale = Vector2( 1, 100 )
+texture = ExtResource( 2 )
+
+[node name="Sprite5" type="Sprite" parent="."]
+visible = false
+modulate = Color( 0.901961, 0.952941, 0, 1 )
+position = Vector2( 525, 300 )
+texture = ExtResource( 2 )
+
+[node name="Sprite4" type="Sprite" parent="."]
+visible = false
+modulate = Color( 0.901961, 0.952941, 0, 1 )
+position = Vector2( 525, 300 )
 texture = ExtResource( 2 )
 
 [node name="Sprite3" type="Sprite" parent="."]
@@ -73,6 +86,11 @@ position = Vector2( -100, 300 )
 scale = Vector2( 0.004, 0.024 )
 texture = ExtResource( 3 )
 
+[node name="Spritedot2" type="Sprite" parent="."]
+position = Vector2( -100, 300 )
+scale = Vector2( 0.02, 0.02 )
+texture = ExtResource( 8 )
+
 [node name="AudioStreamPlayerW" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )
 
@@ -100,10 +118,10 @@ __meta__ = {
 
 [node name="RichTextLabel5" type="RichTextLabel" parent="."]
 visible = false
-margin_left = 100.0
-margin_top = 100.0
-margin_right = 250.0
-margin_bottom = 115.0
+margin_left = 361.924
+margin_top = 506.25
+margin_right = 511.924
+margin_bottom = 521.25
 rect_scale = Vector2( 2, 2 )
 text = "Adjust Catcher Width:"
 __meta__ = {
@@ -123,10 +141,10 @@ __meta__ = {
 
 [node name="SpinBox2" type="SpinBox" parent="."]
 visible = false
-margin_left = 100.0
-margin_top = 130.0
-margin_right = 174.0
-margin_bottom = 154.0
+margin_left = 408.251
+margin_top = 541.595
+margin_right = 482.251
+margin_bottom = 565.595
 rect_scale = Vector2( 2, 2 )
 min_value = 1.0
 max_value = 1000.0
@@ -170,6 +188,18 @@ margin_bottom = 214.0
 rect_scale = Vector2( 1.5, 1.5 )
 group = ExtResource( 7 )
 text = "Catcher Width 450, Cost $300"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ItemList" type="ItemList" parent="."]
+visible = false
+margin_left = 615.0
+margin_top = 447.0
+margin_right = 1015.0
+margin_bottom = 592.0
+max_columns = 3
+same_column_width = true
 __meta__ = {
 "_edit_use_anchors_": false
 }

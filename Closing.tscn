@@ -10,12 +10,20 @@ __meta__ = {
 }
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
-margin_left = 285.105
-margin_top = 110.001
-margin_right = 485.105
-margin_bottom = 260.001
+margin_left = 27.0
+margin_top = 24.0
+margin_right = 514.0
+margin_bottom = 102.0
 rect_scale = Vector2( 2, 2 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ItemList" type="ItemList" parent="."]
+margin_left = 65.0
+margin_top = 235.0
+margin_right = 968.0
+margin_bottom = 535.0
+max_columns = 3
+same_column_width = true

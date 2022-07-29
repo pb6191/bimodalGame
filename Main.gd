@@ -49,6 +49,8 @@ var temp3
 var temp4
 var catchersp2
 var catchersp3
+var catchersp4
+var catchersp5
 var startingCatcherWidth = 0
 var catcherCost
 
@@ -58,10 +60,15 @@ var offset
 var numcatchers
 var modesSaid
 var greenlist
+var greenlistCatcher1
+var greenlistCatcher2
+var caughtIn1 = 0
+var caughtIn2 = 0
 var drawGraph = false
 
 var changeWidth = 0
 var payoffTrial = 1000
+var catchersPlaced = 0
 
 
 func _draw():
@@ -83,6 +90,18 @@ func sum(arr:Array):
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	print(global.catchersAllowed)
+	print(global.numPlayed)
+	print(global.playItertn)
+	var jitter = randi() % 51 + 275
+	$"Sprite2".position.y = jitter
+	$"Sprite3".position.y = jitter
+	$"Sprite4".position.y = jitter + 50
+	$"Sprite5".position.y = jitter - 50
+	$"Sprite4".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
+	$"Sprite5".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
+	$"Sprite4".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
+	$"Sprite5".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
 	global.playItertn += 1
 	if (global.back2backDesign == 1):
 		if global.playItertn == 1:
@@ -153,21 +172,35 @@ func _process(delta):
 		#	$"Sprite2".position.x -=1
 		#	$"Sprite3".position.x -=1
 		if InputEventMouseMotion:
-			if catcheroutside == 0:
+			if catcheroutside == 0 and catchersPlaced < global.catchersAllowed:
 				$"Sprite2".position.x = get_global_mouse_position().x - startingCatcherWidth
 				$"Sprite3".position.x = get_global_mouse_position().x + startingCatcherWidth
+				$"Sprite4".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
+				$"Sprite5".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
+				$"Sprite4".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
+				$"Sprite5".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
 			else:
 				$"Sprite2".position.x = -20
 				$"Sprite3".position.x = -20
+				$"Sprite4".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
+				$"Sprite5".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
+				$"Sprite4".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
+				$"Sprite5".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
 		if Input.is_action_just_pressed("lmb"):
 			readyclick = 1
 		if Input.is_action_just_released("lmb") and readyclick == 1 and !($"Sprite3".position.x<0):
 			readyclick = 0
 			spawnOneCatcher()
+			catchersPlaced = catchersPlaced + 1
+			var jitter = randi() % 51 + 275
+			$"Sprite2".position.y = jitter
+			$"Sprite3".position.y = jitter
+			$"Sprite4".position.y = jitter + 50
+			$"Sprite5".position.y = jitter - 50
 		if changeWidth == 1:
 			startingCatcherWidth = int($"SpinBox2".value / 2)
 			$"RichTextLabel2".visible = true
-			$"RichTextLabel2".text = "On placing new catcher, payoff per caught point will be: "+str(payoffTrial-int($"SpinBox2".value / 2)*2)
+			$"RichTextLabel2".text = "On placing new catcher, payoff per caught point will be: "+str(payoffTrial-(int($"SpinBox2".value / 1))*1)
 	else:
 		$"RichTextLabel2".visible = false
 
@@ -240,16 +273,22 @@ func spawnOne():
 
 func spawnTen():
 	for abc in 10:
-		if has_node("Spritedot"):
-			temp2 = $"Spritedot".duplicate()
+		if has_node("Spritedot2"):
+			temp2 = $"Spritedot2".duplicate()
 			temp2.set_name(generate_word(characters, 10))
 			temp2.position.x = getX()
+			#temp2.position.y = randi() % 21 + 290
+			temp2.position.y = 315 - 3*abc
 			if (temp2.position.x in greenlist):
 				global.win += FULLpayArr1[FULLindexArr1[trialNum]]
 				temp2.modulate = Color( 0, 1, 0, 1 )
 			else:
 				temp2.modulate = Color( 1, 0, 0, 1 )
-			temp2.scale.y = 0.012
+			if (temp2.position.x in greenlistCatcher1):
+				caughtIn1 += 1
+			elif (temp2.position.x in (greenlistCatcher2)):
+				caughtIn2 += 1
+			# temp2.scale.y = 0.012
 			#$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 			get_node("Node/"+traceFolderName).add_child(temp2)
 
@@ -329,6 +368,10 @@ func spawnOneCatcher():
 	numcatchers += 1
 	for n1 in range($"Sprite2".position.x, $"Sprite3".position.x):
 		greenlist.append(n1)
+		if catchersPlaced == 0:
+			greenlistCatcher1.append(n1)
+		if catchersPlaced == 1:
+			greenlistCatcher2.append(n1)
 	payoffTrial = 1000 - greenlist.size()
 	$"RichTextLabel3".text = "Current Payoff per caught point: "+str(payoffTrial)
 	if has_node("Sprite2"):
@@ -339,10 +382,22 @@ func spawnOneCatcher():
 		catchersp3 = $"Sprite3".duplicate()
 		catchersp3.set_name(generate_word(characters, 10))
 		get_node("Catcher/"+catchFolderName).add_child(catchersp3)
+	if has_node("Sprite4"):
+		catchersp4 = $"Sprite4".duplicate()
+		catchersp4.set_name(generate_word(characters, 10))
+		get_node("Catcher/"+catchFolderName).add_child(catchersp4)
+	if has_node("Sprite5"):
+		catchersp5 = $"Sprite5".duplicate()
+		catchersp5.set_name(generate_word(characters, 10))
+		get_node("Catcher/"+catchFolderName).add_child(catchersp5)
 
 func _on_Button_pressed():
 	if $"Button".text == txt1 and freshPress == true:
+		$"ItemList".visible = false
+		$"ItemList".clear()
 		payoffTrial = 1000
+		caughtIn1 = 0
+		caughtIn2 = 0
 		freshPress = false
 		drawGraph = false
 		#$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
@@ -351,11 +406,14 @@ func _on_Button_pressed():
 		#rng4.randomize()
 		rng4.seed
 		offset = 500 + rng4.randi_range(-35, 35)
+		catchersPlaced = 0
 		$"RichTextLabel".text = "Trial Number "+str(trialNum+1)+" of "+str(totalTrials)
 		#$"RichTextLabel3".text = "You get following dollar amount on winning this trial: "+str(FULLpayArr1[FULLindexArr1[trialNum]])
 		$"RichTextLabel3".text = "Current Payoff per caught point: "+str(payoffTrial)
 		$"Sprite2".visible = false
 		$"Sprite3".visible = false
+		$"Sprite4".visible = false
+		$"Sprite5".visible = false
 		for i4 in $"Catcher".get_children():
 			i4.free()
 		if has_node("Catcher/"+catchFolderName):
@@ -377,9 +435,13 @@ func _on_Button_pressed():
 		catcheroutside = 0
 		numcatchers = 0
 		greenlist = []
+		greenlistCatcher1 = []
+		greenlistCatcher2 = []
 		$"AudioStreamPlayerS".play()
-		$"Button".text = txt1mid
+		#$"Button".text = txt1mid
+		$"Button".text = txt2
 	if $"Button".text == txt1mid and freshPress == true:
+		$"ItemList".visible = false
 		freshPress = false
 		$"RichTextLabel4".visible = true
 		modesSaid = 0
@@ -387,6 +449,7 @@ func _on_Button_pressed():
 		$"SpinBox".visible = true
 		$"Button".text = txt2
 	if $"Button".text == txt2 and freshPress == true:
+		$"ItemList".visible = false
 		freshPress = false
 		modesSaid = $"SpinBox".value
 		$"RichTextLabel4".visible = false
@@ -404,8 +467,14 @@ func _on_Button_pressed():
 		catcherCost = 150
 		$"Sprite2".position.x = randPosnCatcher - startingCatcherWidth
 		$"Sprite3".position.x = randPosnCatcher + startingCatcherWidth
+		$"Sprite4".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
+		$"Sprite5".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
+		$"Sprite4".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
+		$"Sprite5".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
 		$"Sprite2".visible = true
 		$"Sprite3".visible = true
+		$"Sprite4".visible = true
+		$"Sprite5".visible = true
 		$"Button".text = txt3
 	if $"Button".text == txt3 and freshPress == true:
 		freshPress = false
@@ -420,6 +489,37 @@ func _on_Button_pressed():
 		#spawnModes()
 		#spawn 10 pts of distribution
 		spawnTen()
+		
+		$"ItemList".visible = true
+		$"ItemList".add_item(" ", null, false)
+		$"ItemList".add_item("Points Caught", null, false)
+		$"ItemList".add_item("Dollar Equivalent", null, false)
+		$"ItemList".add_item("Catcher 1", null, false)
+		$"ItemList".add_item(str(caughtIn1), null, false)
+		$"ItemList".add_item(str(caughtIn1 * payoffTrial), null, false)
+		$"ItemList".add_item("Catcher 2", null, false)
+		$"ItemList".add_item(str(caughtIn2), null, false)
+		$"ItemList".add_item(str(caughtIn2 * payoffTrial), null, false)
+		$"ItemList".add_item("Total", null, false)
+		$"ItemList".add_item(str(caughtIn1+caughtIn2), null, false)
+		$"ItemList".add_item(str((caughtIn1+caughtIn2)*payoffTrial), null, false)
+		
+		if global.numPlayed == 1 and (trialNum+1) == 50:
+			global.sess1var1 = str(caughtIn1)
+			global.sess1var2 = str(caughtIn1 * payoffTrial)
+			global.sess1var3 = str(caughtIn2)
+			global.sess1var4 = str(caughtIn2 * payoffTrial)
+			global.sess1var5 = str(caughtIn1+caughtIn2)
+			global.sess1var6 = str((caughtIn1+caughtIn2)*payoffTrial)
+		
+		if global.numPlayed == 2 and (trialNum+1) == 50:
+			global.sess2var1 = str(caughtIn1)
+			global.sess2var2 = str(caughtIn1 * payoffTrial)
+			global.sess2var3 = str(caughtIn2)
+			global.sess2var4 = str(caughtIn2 * payoffTrial)
+			global.sess2var5 = str(caughtIn1+caughtIn2)
+			global.sess2var6 = str((caughtIn1+caughtIn2)*payoffTrial)
+		
 		if global.playItertn == 1:
 			$"Button".text = txt3mid
 		else:
@@ -428,6 +528,7 @@ func _on_Button_pressed():
 			else:
 				$"Button".text = txt1
 	if $"Button".text == txt3mid and freshPress == true:
+		$"ItemList".visible = false
 		freshPress = false
 		drawGraph = true
 		update()
@@ -436,6 +537,7 @@ func _on_Button_pressed():
 		else:
 			$"Button".text = txt1
 	if $"Button".text == "Main Screen" and freshPress == true:
+		$"ItemList".visible = false
 		freshPress = false
 		drawGraph = false
 		update()
@@ -443,7 +545,13 @@ func _on_Button_pressed():
 			if global.playItertn == 1:
 				get_tree().change_scene("res://Intermid.tscn")
 			else:
-				get_tree().change_scene("res://Closing.tscn")
+				if global.numPlayed == 1:
+					global.catchersAllowed = 2
+					global.numPlayed = 2
+					global.playItertn = 0
+					get_tree().change_scene("res://Menu2.tscn")
+				else:
+					get_tree().change_scene("res://Closing.tscn")
 		else:
 			get_tree().change_scene("res://Menu.tscn")
 

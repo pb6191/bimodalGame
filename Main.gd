@@ -4,6 +4,13 @@ extends Node2D
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
+
+var firstCatcherLeftEdge = "NA"
+var firstCatcherRightEdge = "NA"
+var secondCatcherLeftEdge = "NA"
+var secondCatcherRightEdge = "NA"
+var strListXs
+var finalstrListXs
 var disArr1
 var devArr1
 var proArr1
@@ -70,6 +77,11 @@ var changeWidth = 0
 var payoffTrial = 1000
 var catchersPlaced = 0
 
+var saveOutput = []
+var timeElapsedSinceGameStart = 0
+var timeElapsedSinceLastLog = 0
+var http_client
+var dataString = {"filename": "", "filedata":""}
 
 func _draw():
 	if drawGraph == true:
@@ -158,12 +170,30 @@ func _ready():
 		FULLindexArr1[k] = FULLindexArr1[tempIndex]
 		FULLindexArr1[tempIndex] = tempOdd
 	$"Button".text = txt1
+	saveOutput.append("timeStamp,numTrial,timeElapsedSinceGameStart,timeElapsedSinceLastLog,1stMode,2ndMode,StdDev,InitialPoints,1stCatcherLeftEdge,1stCatcherRightEdge,2ndCatcherLeftEdge,2ndCatcherRightEdge,FinalPoints,PerPointPayoff,1stCatcherPoints,2ndCatcherPoints,1stCatcherPayoff,2ndCatcherPayoff")
+	timeElapsedSinceLastLog = 0
+	http_client = HTTPClient.new()
+
+func _make_post_request(url, data_to_send):
+	var query = JSON.print(data_to_send)
+	#var query = data_to_send
+	var headers = ["Content-Type: application/json"]
+	#http_client.connect_to_host("192.168.0.101", 8081)
+	http_client.connect_to_host("https://maloneylabexperiments.hosting.nyu.edu")
+	while(http_client.get_status() != 5):
+		http_client.poll()
+	http_client.poll()
+	http_client.request(HTTPClient.METHOD_POST, url, headers, query)
+	http_client.close()
+
 
 
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	timeElapsedSinceGameStart = timeElapsedSinceGameStart + delta
+	timeElapsedSinceLastLog = timeElapsedSinceLastLog + delta
 	if $"Button".text == txt3:
 		#if Input.is_action_pressed("ui_right"):
 		#	$"Sprite2".position.x +=1
@@ -245,6 +275,7 @@ func getX():
 
 
 func spawnCookies():
+	strListXs = ""
 	print(str(FULLsamArr1[FULLindexArr1[trialNum]]))
 	var howmany = 0
 	for j in FULLsamArr1[FULLindexArr1[trialNum]]: 
@@ -252,6 +283,7 @@ func spawnCookies():
 			temp = $"Spritedot".duplicate()
 			temp.set_name(generate_word(characters, 10))
 			temp.position.x = getX()
+			strListXs = strListXs + str(temp.position.x) + " "
 			get_node("Node/"+traceFolderName).add_child(temp)
 			howmany += 1
 			print(str(howmany)+" - "+str(temp.position.x))
@@ -272,11 +304,13 @@ func spawnOne():
 		get_node("Node/"+traceFolderName).add_child(temp2)
 
 func spawnTen():
+	finalstrListXs = ""
 	for abc in 10:
 		if has_node("Spritedot2"):
 			temp2 = $"Spritedot2".duplicate()
 			temp2.set_name(generate_word(characters, 10))
 			temp2.position.x = getX()
+			finalstrListXs = finalstrListXs + str(temp2.position.x) + " "
 			#temp2.position.y = randi() % 21 + 290
 			temp2.position.y = 315 - 3*abc
 			if (temp2.position.x in greenlist):
@@ -366,6 +400,12 @@ func spawnOneCatcher():
 	#$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 	print("catcher placed")
 	numcatchers += 1
+	if catchersPlaced == 0:
+		firstCatcherLeftEdge = str($"Sprite2".position.x)
+		firstCatcherRightEdge = str($"Sprite3".position.x)
+	if catchersPlaced == 1:
+		secondCatcherLeftEdge = str($"Sprite2".position.x)
+		secondCatcherRightEdge = str($"Sprite3".position.x)
 	for n1 in range($"Sprite2".position.x, $"Sprite3".position.x):
 		greenlist.append(n1)
 		if catchersPlaced == 0:
@@ -431,6 +471,10 @@ func _on_Button_pressed():
 			traceFolder.set_name(traceFolderName)
 			$"Node".add_child(traceFolder)
 		spawnCookies()
+		firstCatcherLeftEdge = "NA"
+		firstCatcherRightEdge = "NA"
+		secondCatcherLeftEdge = "NA"
+		secondCatcherRightEdge = "NA"
 		readyclick = 0
 		catcheroutside = 0
 		numcatchers = 0
@@ -520,6 +564,11 @@ func _on_Button_pressed():
 			global.sess2var5 = str(caughtIn1+caughtIn2)
 			global.sess2var6 = str((caughtIn1+caughtIn2)*payoffTrial)
 		
+		var time2 = OS.get_time()
+		var time_return2 = String(time2.hour) +":"+String(time2.minute)+":"+String(time2.second)
+		saveOutput.append(time_return2+","+str(trialNum+1)+ "," + str(timeElapsedSinceGameStart) + "," + str(timeElapsedSinceLastLog) + "," + str(offset - int(FULLdisArr1[FULLindexArr1[trialNum]]/2)) + "," + str(offset + int(FULLdisArr1[FULLindexArr1[trialNum]]/2)) + "," + str(SDmultiplierUnimodal*FULLdevArr1[FULLindexArr1[trialNum]]) + "," + strListXs + "," + firstCatcherLeftEdge + "," + firstCatcherRightEdge + "," + secondCatcherLeftEdge + "," + secondCatcherRightEdge + "," + finalstrListXs + "," + str(payoffTrial) + "," + str(caughtIn1) + "," + str(caughtIn2) + "," + str(caughtIn1*payoffTrial) + "," + str(caughtIn2*payoffTrial) )
+		timeElapsedSinceLastLog = 0
+		
 		if global.playItertn == 1:
 			$"Button".text = txt3mid
 		else:
@@ -537,6 +586,18 @@ func _on_Button_pressed():
 		else:
 			$"Button".text = txt1
 	if $"Button".text == "Main Screen" and freshPress == true:
+		var datetime0 = OS.get_datetime()
+		var filename_datetime0 = String(datetime0.year) +String(datetime0.month) +String(datetime0.day) +String(datetime0.hour) +String(datetime0.minute) +String(datetime0.second)
+		if global.playItertn == 1 and global.numPlayed == 1:
+			dataString.filename = "BIMODAL_dataFile_SingleCatcherTrainingTrials"+"_code_"+global.participCode+"_"+filename_datetime0+".csv"
+		if global.playItertn == 2 and global.numPlayed == 1:
+			dataString.filename = "BIMODAL_dataFile_SingleCatcherTestTrials"+"_code_"+global.participCode+"_"+filename_datetime0+".csv"
+		if global.playItertn == 1 and global.numPlayed == 2:
+			dataString.filename = "BIMODAL_dataFile_DoubleCatcherTrainingTrials"+"_code_"+global.participCode+"_"+filename_datetime0+".csv"
+		if global.playItertn == 2 and global.numPlayed == 2:
+			dataString.filename = "BIMODAL_dataFile_DoubleCatcherTestTrials"+"_code_"+global.participCode+"_"+filename_datetime0+".csv"
+		dataString.filedata = (saveOutput)
+		_make_post_request("/record_result.php", dataString)
 		$"ItemList".visible = false
 		freshPress = false
 		drawGraph = false

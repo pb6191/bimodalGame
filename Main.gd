@@ -493,13 +493,14 @@ func _on_Button_pressed():
 		$"SpinBox".visible = true
 		$"Button".text = txt2
 	if $"Button".text == txt2 and freshPress == true:
+		var startingCatcherWidth = (randi() % 1000) + 1
 		$"ItemList".visible = false
 		freshPress = false
 		modesSaid = $"SpinBox".value
 		$"RichTextLabel4".visible = false
 		$"SpinBox".visible = false
 		$"RichTextLabel5".visible = true
-		$"SpinBox2".value = 150
+		$"SpinBox2".value = startingCatcherWidth
 		$"SpinBox2".visible = true
 		changeWidth = 1
 		#$"CheckBox".pressed = true
@@ -508,7 +509,7 @@ func _on_Button_pressed():
 		#$"CheckBox3".visible = true
 		var randPosnCatcher = (randi() % 1000) + 1
 		startingCatcherWidth = int(FULLcatArr1[FULLindexArr1[trialNum]]/2)
-		catcherCost = 150
+		catcherCost = startingCatcherWidth
 		$"Sprite2".position.x = randPosnCatcher - startingCatcherWidth
 		$"Sprite3".position.x = randPosnCatcher + startingCatcherWidth
 		$"Sprite4".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
@@ -548,7 +549,7 @@ func _on_Button_pressed():
 		$"ItemList".add_item(str(caughtIn1+caughtIn2), null, false)
 		$"ItemList".add_item(str((caughtIn1+caughtIn2)*payoffTrial), null, false)
 		
-		if global.numPlayed == 1 and (trialNum+1) == 50:
+		if global.numPlayed == 1 and (trialNum+1) == 150:
 			global.sess1var1 = str(caughtIn1)
 			global.sess1var2 = str(caughtIn1 * payoffTrial)
 			global.sess1var3 = str(caughtIn2)
@@ -556,7 +557,7 @@ func _on_Button_pressed():
 			global.sess1var5 = str(caughtIn1+caughtIn2)
 			global.sess1var6 = str((caughtIn1+caughtIn2)*payoffTrial)
 		
-		if global.numPlayed == 2 and (trialNum+1) == 50:
+		if global.numPlayed == 2 and (trialNum+1) == 150:
 			global.sess2var1 = str(caughtIn1)
 			global.sess2var2 = str(caughtIn1 * payoffTrial)
 			global.sess2var3 = str(caughtIn2)
@@ -569,7 +570,7 @@ func _on_Button_pressed():
 		saveOutput.append(time_return2+","+str(trialNum+1)+ "," + str(timeElapsedSinceGameStart) + "," + str(timeElapsedSinceLastLog) + "," + str(offset - int(FULLdisArr1[FULLindexArr1[trialNum]]/2)) + "," + str(offset + int(FULLdisArr1[FULLindexArr1[trialNum]]/2)) + "," + str(SDmultiplierUnimodal*FULLdevArr1[FULLindexArr1[trialNum]]) + "," + strListXs + "," + firstCatcherLeftEdge + "," + firstCatcherRightEdge + "," + secondCatcherLeftEdge + "," + secondCatcherRightEdge + "," + finalstrListXs + "," + str(payoffTrial) + "," + str(caughtIn1) + "," + str(caughtIn2) + "," + str(caughtIn1*payoffTrial) + "," + str(caughtIn2*payoffTrial) )
 		timeElapsedSinceLastLog = 0
 		
-		if global.playItertn == 1:
+		if (global.playItertn == 1) or ("testing" in global.participCode):
 			$"Button".text = txt3mid
 		else:
 			if (trialNum+1)==totalTrials:
@@ -607,10 +608,17 @@ func _on_Button_pressed():
 				get_tree().change_scene("res://Intermid.tscn")
 			else:
 				if global.numPlayed == 1:
+					global.sess2var1 = str(0) # keeping just one catcher game for now, remove this line and uncomment 'Menu2' for one+two cather game
+					global.sess2var2 = str(0) # keeping just one catcher game for now, remove this line and uncomment 'Menu2' for one+two cather game
+					global.sess2var3 = str(0) # keeping just one catcher game for now, remove this line and uncomment 'Menu2' for one+two cather game
+					global.sess2var4 = str(0) # keeping just one catcher game for now, remove this line and uncomment 'Menu2' for one+two cather game
+					global.sess2var5 = str(0) # keeping just one catcher game for now, remove this line and uncomment 'Menu2' for one+two cather game
+					global.sess2var6 = str(0) # keeping just one catcher game for now, remove this line and uncomment 'Menu2' for one+two cather game
+					get_tree().change_scene("res://Closing.tscn") # keeping just one catcher game for now, remove this line and uncomment 'Menu2' for one+two cather game
 					global.catchersAllowed = 2
 					global.numPlayed = 2
 					global.playItertn = 0
-					get_tree().change_scene("res://Menu2.tscn")
+					# get_tree().change_scene("res://Menu2.tscn")
 				else:
 					get_tree().change_scene("res://Closing.tscn")
 		else:

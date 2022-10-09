@@ -20,7 +20,7 @@ func _on_ButtonIntermed_pressed():
 	global.disArr = ["500", "0", "250", "200", "300", "400"]
 	#std dev is doubled if the distance between peaks is 0
 	#separate logic if distance >= 600
-	global.devArr = ["83"]
+	global.devArr = ["83", "28", "56"]
 	global.proArr = ["50"]
 	#global.catArr = ["332", "832"]
 	global.catArr = ["150"]

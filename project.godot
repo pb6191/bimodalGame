@@ -41,4 +41,5 @@ lmb={
 
 [rendering]
 
+environment/default_clear_color=Color( 0.447059, 0.447059, 0.447059, 1 )
 environment/default_environment="res://default_env.tres"

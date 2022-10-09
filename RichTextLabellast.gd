@@ -8,7 +8,7 @@ extends RichTextLabel
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	$".".text = "Please note down your code - " + global.participCode + ". You will need it for reimbursement. You will be paid for trial #50 in both sessions and your total is as follows:"
+	$".".text = "Please note down your code - " + global.participCode + ". You will need it for reimbursement. You will be paid for trial #50 in session(s) and your total is as follows:"
 	$"../ItemList".add_item(" ", null, false)
 	$"../ItemList".add_item("Points Caught", null, false)
 	$"../ItemList".add_item("Dollar Equivalent", null, false)

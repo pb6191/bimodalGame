@@ -195,27 +195,32 @@ func _process(delta):
 	timeElapsedSinceGameStart = timeElapsedSinceGameStart + delta
 	timeElapsedSinceLastLog = timeElapsedSinceLastLog + delta
 	if $"Button".text == txt3:
-		#if Input.is_action_pressed("ui_right"):
-		#	$"Sprite2".position.x +=1
-		#	$"Sprite3".position.x +=1
-		#if Input.is_action_pressed("ui_left"):
-		#	$"Sprite2".position.x -=1
-		#	$"Sprite3".position.x -=1
-		if InputEventMouseMotion:
-			if catcheroutside == 0 and catchersPlaced < global.catchersAllowed:
-				$"Sprite2".position.x = get_global_mouse_position().x - startingCatcherWidth
-				$"Sprite3".position.x = get_global_mouse_position().x + startingCatcherWidth
-				$"Sprite4".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
-				$"Sprite5".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
-				$"Sprite4".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
-				$"Sprite5".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
-			else:
-				$"Sprite2".position.x = -20
-				$"Sprite3".position.x = -20
-				$"Sprite4".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
-				$"Sprite5".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
-				$"Sprite4".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
-				$"Sprite5".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
+		if catcheroutside == 0 and catchersPlaced < global.catchersAllowed:
+			if Input.is_action_pressed("ui_right"):
+				$"Sprite2".position.x +=1
+				$"Sprite3".position.x +=1
+			if Input.is_action_pressed("ui_left"):
+				$"Sprite2".position.x -=1
+				$"Sprite3".position.x -=1
+			if Input.is_action_pressed("ui_up") and $"SpinBox2".value<=1000:
+				$"SpinBox2".value +=1
+			if Input.is_action_pressed("ui_down") and $"SpinBox2".value>=1:
+				$"SpinBox2".value -=1
+			$"Sprite3".position.x =$"Sprite2".position.x + 2*startingCatcherWidth
+		else:
+			$"Sprite2".position.x = -20
+			$"Sprite3".position.x = -20
+		#if InputEventMouseMotion:
+		#	if catcheroutside == 0 and catchersPlaced < global.catchersAllowed:
+		#		$"Sprite2".position.x = get_global_mouse_position().x - startingCatcherWidth
+		#		$"Sprite3".position.x = get_global_mouse_position().x + startingCatcherWidth
+		#	else:
+		#		$"Sprite2".position.x = -20
+		#		$"Sprite3".position.x = -20
+		$"Sprite4".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
+		$"Sprite5".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
+		$"Sprite4".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
+		$"Sprite5".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
 		if Input.is_action_just_pressed("lmb"):
 			readyclick = 1
 		if Input.is_action_just_released("lmb") and readyclick == 1 and !($"Sprite3".position.x<0):
@@ -230,9 +235,11 @@ func _process(delta):
 		if changeWidth == 1:
 			startingCatcherWidth = int($"SpinBox2".value / 2)
 			$"RichTextLabel2".visible = true
-			$"RichTextLabel2".text = "On placing new catcher, payoff per caught point will be: "+str(payoffTrial-(int($"SpinBox2".value / 1))*1)
+			$"Sprite6".visible = true
+			$"RichTextLabel2".bbcode_text = "On placing new catcher, payoff per caught point will be: [b][i]"+str(payoffTrial-(int($"SpinBox2".value / 1))*1)+"[/i][/b]"
 	else:
 		$"RichTextLabel2".visible = false
+		$"Sprite6".visible = false
 
 
 func getX():
@@ -549,7 +556,7 @@ func _on_Button_pressed():
 		$"ItemList".add_item(str(caughtIn1+caughtIn2), null, false)
 		$"ItemList".add_item(str((caughtIn1+caughtIn2)*payoffTrial), null, false)
 		
-		if global.numPlayed == 1 and (trialNum+1) == 150:
+		if global.numPlayed == 1 and (trialNum+1) == 50: # this should always be 50 given there are atleast 50 test trials, because this is for one shot payment
 			global.sess1var1 = str(caughtIn1)
 			global.sess1var2 = str(caughtIn1 * payoffTrial)
 			global.sess1var3 = str(caughtIn2)
@@ -557,7 +564,7 @@ func _on_Button_pressed():
 			global.sess1var5 = str(caughtIn1+caughtIn2)
 			global.sess1var6 = str((caughtIn1+caughtIn2)*payoffTrial)
 		
-		if global.numPlayed == 2 and (trialNum+1) == 150:
+		if global.numPlayed == 2 and (trialNum+1) == 50: # this should always be 50 given there are atleast 50 test trials, because this is for one shot payment
 			global.sess2var1 = str(caughtIn1)
 			global.sess2var2 = str(caughtIn1 * payoffTrial)
 			global.sess2var3 = str(caughtIn2)

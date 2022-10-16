@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://tracepixel.png" type="Texture" id=2]
@@ -8,6 +8,19 @@
 [ext_resource path="res://mixkit-coins-handling-1939.wav" type="AudioStream" id=6]
 [ext_resource path="res://catcher_buttongroup.tres" type="ButtonGroup" id=7]
 [ext_resource path="res://pngfind.com-white-circles-png-3619117.png" type="Texture" id=8]
+[ext_resource path="res://wind_2d.shader" type="Shader" id=9]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 9 )
+shader_param/speed = 1.0
+shader_param/minStrength = 0.1
+shader_param/maxStrength = 0.1
+shader_param/strengthScale = 0.3
+shader_param/interval = 2.0
+shader_param/detail = 0.0
+shader_param/distortion = 0.2
+shader_param/heightOffset = 0.0
+shader_param/direction = 3.0
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 1 )
@@ -74,6 +87,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Sprite6" type="Sprite" parent="."]
+visible = false
+modulate = Color( 0, 0, 0, 1 )
+material = SubResource( 1 )
+position = Vector2( 975, 572 )
+scale = Vector2( 50, 20 )
+texture = ExtResource( 2 )
+
 [node name="RichTextLabel2" type="RichTextLabel" parent="."]
 visible = false
 margin_left = 720.0
@@ -81,6 +102,7 @@ margin_top = 540.0
 margin_right = 920.0
 margin_bottom = 580.0
 rect_scale = Vector2( 1.5, 1.5 )
+bbcode_enabled = true
 __meta__ = {
 "_edit_use_anchors_": false
 }

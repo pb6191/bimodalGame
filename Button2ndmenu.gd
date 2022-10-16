@@ -18,7 +18,7 @@ func _ready():
 
 func _on_Button_pressed():
 	if global.back2backDesign == 1:
-		global.disArr = ["0", "500"]
+		global.disArr = ["0", "400"]
 		#std dev is doubled if the distance between peaks is 0
 		#separate logic if distance >= 600
 		global.devArr = ["83"]

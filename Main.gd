@@ -72,6 +72,7 @@ var greenlistCatcher2
 var caughtIn1 = 0
 var caughtIn2 = 0
 var drawGraph = false
+var draw2ndGraph = false
 
 var changeWidth = 0
 var payoffTrial = 1000
@@ -92,6 +93,8 @@ func _draw():
 			drawing.push_back(Vector2(i+offset, yPoint))
 		for index_point in range(1999):
 			draw_line(drawing[index_point], drawing[index_point + 1], Color(1, 1, 1, 1))
+	if draw2ndGraph == true:
+		draw_circle(Vector2(122+( $"SpinBox2".value +1000 - sqrt((2000 * payoffTrial) - (payoffTrial * payoffTrial)) )/1000*71, 108+(1000-( 1000 - sqrt(   1000000 - ( $"SpinBox2".value - sqrt((2000 * payoffTrial) - (payoffTrial * payoffTrial)) ) * ( $"SpinBox2".value - sqrt((2000 * payoffTrial) - (payoffTrial * payoffTrial)) )     )) )/1000*71), 5.0, Color(0.3, 0.6, 0.1, 1))
 
 func sum(arr:Array):
 	var result = 0
@@ -195,6 +198,24 @@ func _process(delta):
 	timeElapsedSinceGameStart = timeElapsedSinceGameStart + delta
 	timeElapsedSinceLastLog = timeElapsedSinceLastLog + delta
 	if $"Button".text == txt3:
+		if Input.is_action_just_pressed("lmb"):
+			readyclick = 1
+		if Input.is_action_just_released("lmb") and readyclick == 1 and !($"Sprite3".position.x<0):
+			readyclick = 0
+			spawnOneCatcherLMB()
+			catchersPlaced = catchersPlaced + 1
+			draw2ndGraph = false
+			update()
+			$"RichTextLabel2".visible = false
+			$"Sprite6".visible = false
+			$"Sprite7".visible = false
+			$"Button".visible = true
+			if global.catchersAllowed == 2:
+				var jitter = randi() % 51 + 275
+				$"Sprite2".position.y = jitter
+				$"Sprite3".position.y = jitter
+				$"Sprite4".position.y = jitter + 50
+				$"Sprite5".position.y = jitter - 50
 		if catcheroutside == 0 and catchersPlaced < global.catchersAllowed:
 			if Input.is_action_pressed("ui_right"):
 				$"Sprite2".position.x +=1
@@ -207,6 +228,57 @@ func _process(delta):
 			if Input.is_action_pressed("ui_down") and $"SpinBox2".value>=1:
 				$"SpinBox2".value -=1
 			$"Sprite3".position.x =$"Sprite2".position.x + 2*startingCatcherWidth
+			if Input.is_action_pressed("ui_select") and !($"Sprite3".position.x<0):
+				$"Button".visible = true
+				spawnOneCatcherLMB()
+				catchersPlaced = catchersPlaced + 1
+				if global.catchersAllowed == 2:
+					var jitter = randi() % 51 + 275
+					$"Sprite2".position.y = jitter
+					$"Sprite3".position.y = jitter
+					$"Sprite4".position.y = jitter + 50
+					$"Sprite5".position.y = jitter - 50
+				
+				draw2ndGraph = false
+				$"Sprite7".visible = false
+				update()
+				spawnTen()
+				$"ItemList".visible = true
+				$"ItemList".add_item(" ", null, false)
+				$"ItemList".add_item("Points Caught", null, false)
+				$"ItemList".add_item("Payoff Equivalent", null, false)
+				$"ItemList".add_item("Total", null, false)
+				$"ItemList".add_item(str(caughtIn1+caughtIn2), null, false)
+				$"ItemList".add_item(str((caughtIn1+caughtIn2)*payoffTrial), null, false)
+				
+				if global.numPlayed == 1 and (trialNum+1) == 50: # this should always be 50 given there are atleast 50 test trials, because this is for one shot payment
+					global.sess1var1 = str(caughtIn1)
+					global.sess1var2 = str(caughtIn1 * payoffTrial)
+					global.sess1var3 = str(caughtIn2)
+					global.sess1var4 = str(caughtIn2 * payoffTrial)
+					global.sess1var5 = str(caughtIn1+caughtIn2)
+					global.sess1var6 = str((caughtIn1+caughtIn2)*payoffTrial)
+				
+				if global.numPlayed == 2 and (trialNum+1) == 50: # this should always be 50 given there are atleast 50 test trials, because this is for one shot payment
+					global.sess2var1 = str(caughtIn1)
+					global.sess2var2 = str(caughtIn1 * payoffTrial)
+					global.sess2var3 = str(caughtIn2)
+					global.sess2var4 = str(caughtIn2 * payoffTrial)
+					global.sess2var5 = str(caughtIn1+caughtIn2)
+					global.sess2var6 = str((caughtIn1+caughtIn2)*payoffTrial)
+				
+				var time2 = OS.get_time()
+				var time_return2 = String(time2.hour) +":"+String(time2.minute)+":"+String(time2.second)
+				saveOutput.append(time_return2+","+str(trialNum+1)+ "," + str(timeElapsedSinceGameStart) + "," + str(timeElapsedSinceLastLog) + "," + str(offset - int(FULLdisArr1[FULLindexArr1[trialNum]]/2)) + "," + str(offset + int(FULLdisArr1[FULLindexArr1[trialNum]]/2)) + "," + str(SDmultiplierUnimodal*FULLdevArr1[FULLindexArr1[trialNum]]) + "," + strListXs + "," + firstCatcherLeftEdge + "," + firstCatcherRightEdge + "," + secondCatcherLeftEdge + "," + secondCatcherRightEdge + "," + finalstrListXs + "," + str(payoffTrial) + "," + str(caughtIn1) + "," + str(caughtIn2) + "," + str(caughtIn1*payoffTrial) + "," + str(caughtIn2*payoffTrial) )
+				timeElapsedSinceLastLog = 0
+				
+				if (global.playItertn == 1) or ("testing" in global.participCode):
+					$"Button".text = txt3mid
+				else:
+					if (trialNum+1)==totalTrials:
+						$"Button".text = "Main Screen"
+					else:
+						$"Button".text = txt1
 		else:
 			$"Sprite2".position.x = -20
 			$"Sprite3".position.x = -20
@@ -221,22 +293,13 @@ func _process(delta):
 		$"Sprite5".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
 		$"Sprite4".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
 		$"Sprite5".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
-		if Input.is_action_just_pressed("lmb"):
-			readyclick = 1
-		if Input.is_action_just_released("lmb") and readyclick == 1 and !($"Sprite3".position.x<0):
-			readyclick = 0
-			spawnOneCatcher()
-			catchersPlaced = catchersPlaced + 1
-			var jitter = randi() % 51 + 275
-			$"Sprite2".position.y = jitter
-			$"Sprite3".position.y = jitter
-			$"Sprite4".position.y = jitter + 50
-			$"Sprite5".position.y = jitter - 50
+
 		if changeWidth == 1:
+			update()
 			startingCatcherWidth = int($"SpinBox2".value / 2)
 			$"RichTextLabel2".visible = true
 			$"Sprite6".visible = true
-			$"RichTextLabel2".bbcode_text = "On placing new catcher, payoff per caught point will be: [b][i]"+str(payoffTrial-(int($"SpinBox2".value / 1))*1)+"[/i][/b]"
+			$"RichTextLabel2".bbcode_text = "On placing new catcher, payoff per caught point will be: [b][i]"+str(int( 1000 - sqrt(   1000000 - ( $"SpinBox2".value - sqrt((2000 * payoffTrial) - (payoffTrial * payoffTrial)) ) * ( $"SpinBox2".value - sqrt((2000 * payoffTrial) - (payoffTrial * payoffTrial)) )     ))) +"[/i][/b]"
 	else:
 		$"RichTextLabel2".visible = false
 		$"Sprite6".visible = false
@@ -402,7 +465,7 @@ func spawnModes():
 			get_node("Node/"+traceFolderName).add_child(temp3)
 			get_node("Node/"+traceFolderName).add_child(temp4)
 
-func spawnOneCatcher():
+func spawnOneCatcherSPACE():
 	global.win -= catcherCost
 	#$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 	print("catcher placed")
@@ -413,13 +476,56 @@ func spawnOneCatcher():
 	if catchersPlaced == 1:
 		secondCatcherLeftEdge = str($"Sprite2".position.x)
 		secondCatcherRightEdge = str($"Sprite3".position.x)
-	for n1 in range($"Sprite2".position.x, $"Sprite3".position.x):
+	for n1 in range($"Sprite2".position.x, $"Sprite3".position.x + 1):
 		greenlist.append(n1)
 		if catchersPlaced == 0:
 			greenlistCatcher1.append(n1)
 		if catchersPlaced == 1:
 			greenlistCatcher2.append(n1)
-	payoffTrial = 1000 - greenlist.size()
+	# payoffTrial = 1000 - greenlist.size() # linear
+	payoffTrial = int (1000 - sqrt(1000000 - ( (greenlist.size()-1000)*(greenlist.size()-1000) ) ) ) #quadratic
+	$"RichTextLabel3".text = "Current Payoff per caught point: "+str(payoffTrial)
+	if catchersPlaced == 0 and global.catchersAllowed == 2:
+		if has_node("Sprite2"):
+			catchersp2 = $"Sprite2".duplicate()
+			catchersp2.set_name(generate_word(characters, 10))
+			get_node("Catcher/"+catchFolderName).add_child(catchersp2)
+		if has_node("Sprite3"):
+			catchersp3 = $"Sprite3".duplicate()
+			catchersp3.set_name(generate_word(characters, 10))
+			get_node("Catcher/"+catchFolderName).add_child(catchersp3)
+		if has_node("Sprite4"):
+			catchersp4 = $"Sprite4".duplicate()
+			catchersp4.set_name(generate_word(characters, 10))
+			get_node("Catcher/"+catchFolderName).add_child(catchersp4)
+		if has_node("Sprite5"):
+			catchersp5 = $"Sprite5".duplicate()
+			catchersp5.set_name(generate_word(characters, 10))
+			get_node("Catcher/"+catchFolderName).add_child(catchersp5)
+
+func spawnOneCatcherLMB():
+	global.win -= catcherCost
+	if catchersPlaced == 0 and global.catchersAllowed == 2:
+		changeWidth = 1
+	else:
+		changeWidth = 0
+	#$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
+	print("catcher placed")
+	numcatchers += 1
+	if catchersPlaced == 0:
+		firstCatcherLeftEdge = str($"Sprite2".position.x)
+		firstCatcherRightEdge = str($"Sprite3".position.x)
+	if catchersPlaced == 1:
+		secondCatcherLeftEdge = str($"Sprite2".position.x)
+		secondCatcherRightEdge = str($"Sprite3".position.x)
+	for n1 in range($"Sprite2".position.x, $"Sprite3".position.x + 1):
+		greenlist.append(n1)
+		if catchersPlaced == 0:
+			greenlistCatcher1.append(n1)
+		if catchersPlaced == 1:
+			greenlistCatcher2.append(n1)
+	# payoffTrial = 1000 - greenlist.size() # linear
+	payoffTrial = int (1000 - sqrt(1000000 - ( (greenlist.size()-1000)*(greenlist.size()-1000) ) ) ) #quadratic
 	$"RichTextLabel3".text = "Current Payoff per caught point: "+str(payoffTrial)
 	if has_node("Sprite2"):
 		catchersp2 = $"Sprite2".duplicate()
@@ -447,6 +553,8 @@ func _on_Button_pressed():
 		caughtIn2 = 0
 		freshPress = false
 		drawGraph = false
+		draw2ndGraph = false
+		$"Sprite7".visible = false
 		#$"RichTextLabel2".text = "Total Balance in Dollars: "+str(global.win)
 		update()
 		trialNum +=1
@@ -503,12 +611,17 @@ func _on_Button_pressed():
 		var startingCatcherWidth = (randi() % 1000) + 1
 		$"ItemList".visible = false
 		freshPress = false
+		draw2ndGraph = true
+		$"Sprite7".visible = true
+		update()
 		modesSaid = $"SpinBox".value
 		$"RichTextLabel4".visible = false
 		$"SpinBox".visible = false
-		$"RichTextLabel5".visible = true
+		# $"RichTextLabel5".visible = true # uncomment if need to use spinbox for adjusting cather width
 		$"SpinBox2".value = startingCatcherWidth
-		$"SpinBox2".visible = true
+		
+		# $"SpinBox2".visible = true # uncomment if need to use spinbox for adjusting cather width
+		
 		changeWidth = 1
 		#$"CheckBox".pressed = true
 		#$"CheckBox".visible = true
@@ -527,9 +640,17 @@ func _on_Button_pressed():
 		$"Sprite3".visible = true
 		$"Sprite4".visible = true
 		$"Sprite5".visible = true
+		
+		print(catchersPlaced)
+		print("catcher LOCATION"+str($"Sprite2".position.x)+"AND"+str($"Sprite2".position.y)+"AND"+str($"Sprite2".visible)+$"Button".text)
 		$"Button".text = txt3
+		$"Button".visible = false # using space bar - "ui_select"
+		catcheroutside = 0 # using space bar - "ui_select"
 	if $"Button".text == txt3 and freshPress == true:
 		freshPress = false
+		draw2ndGraph = false
+		$"Sprite7".visible = false
+		update()
 		$"RichTextLabel5".visible = false
 		$"SpinBox2".visible = false
 		#$"CheckBox".visible = false
@@ -545,13 +666,13 @@ func _on_Button_pressed():
 		$"ItemList".visible = true
 		$"ItemList".add_item(" ", null, false)
 		$"ItemList".add_item("Points Caught", null, false)
-		$"ItemList".add_item("Dollar Equivalent", null, false)
-		$"ItemList".add_item("Catcher 1", null, false)
-		$"ItemList".add_item(str(caughtIn1), null, false)
-		$"ItemList".add_item(str(caughtIn1 * payoffTrial), null, false)
-		$"ItemList".add_item("Catcher 2", null, false)
-		$"ItemList".add_item(str(caughtIn2), null, false)
-		$"ItemList".add_item(str(caughtIn2 * payoffTrial), null, false)
+		$"ItemList".add_item("Payoff Equivalent", null, false)
+		#$"ItemList".add_item("Catcher 1", null, false)
+		#$"ItemList".add_item(str(caughtIn1), null, false)
+		#$"ItemList".add_item(str(caughtIn1 * payoffTrial), null, false)
+		#$"ItemList".add_item("Catcher 2", null, false)
+		#$"ItemList".add_item(str(caughtIn2), null, false)
+		#$"ItemList".add_item(str(caughtIn2 * payoffTrial), null, false)
 		$"ItemList".add_item("Total", null, false)
 		$"ItemList".add_item(str(caughtIn1+caughtIn2), null, false)
 		$"ItemList".add_item(str((caughtIn1+caughtIn2)*payoffTrial), null, false)
@@ -588,6 +709,8 @@ func _on_Button_pressed():
 		$"ItemList".visible = false
 		freshPress = false
 		drawGraph = true
+		draw2ndGraph = false
+		$"Sprite7".visible = false
 		update()
 		if (trialNum+1)==totalTrials:
 			$"Button".text = "Main Screen"
@@ -609,6 +732,8 @@ func _on_Button_pressed():
 		$"ItemList".visible = false
 		freshPress = false
 		drawGraph = false
+		draw2ndGraph = false
+		$"Sprite7".visible = false
 		update()
 		if (global.back2backDesign == 1):
 			if global.playItertn == 1:

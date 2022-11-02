@@ -19,6 +19,9 @@ rect_scale = Vector2( 2, 2 )
 text = "Now, the game gets more interesting.
 
 Remember, only 1 of the upcoming trials matters and you will be paid for your performance on that trial."
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ButtonIntermed" type="Button" parent="."]
 margin_left = 392.862

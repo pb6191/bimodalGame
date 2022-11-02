@@ -48,14 +48,14 @@ func _on_Button_pressed():
 	global.samArr = global.sample.split(",")
 	global.participCode = $"../LineEdit7".text
 	if global.back2backDesign == 1:
-		global.disArr = ["0", "400"]
+		global.disArr = ["0"]
 		#std dev is doubled if the distance between peaks is 0
 		#separate logic if distance >= 600
-		global.devArr = ["83"]
+		global.devArr = ["83", "28", "56"]
 		global.proArr = ["50"]
 		#global.catArr = ["832"]
 		global.catArr = ["150"]
 		global.payArr = ["100"]
-		global.samArr = ["20"]
-		global.trials = 3
+		global.samArr = ["40"]
+		global.trials = 50
 	get_tree().change_scene("res://Main.tscn")

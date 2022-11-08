@@ -115,6 +115,46 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="RichTextLabel6" type="RichTextLabel" parent="."]
+visible = false
+margin_left = 400.0
+margin_top = 100.0
+margin_right = 600.0
+margin_bottom = 140.0
+rect_scale = Vector2( 4, 4 )
+custom_colors/default_color = Color( 0, 0, 0, 1 )
+bbcode_enabled = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel8" type="RichTextLabel" parent="."]
+visible = false
+margin_left = 400.0
+margin_top = 100.0
+margin_right = 600.0
+margin_bottom = 140.0
+rect_scale = Vector2( 4, 4 )
+custom_colors/default_color = Color( 0, 0, 0, 1 )
+bbcode_enabled = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel7" type="RichTextLabel" parent="."]
+visible = false
+margin_left = 250.0
+margin_top = 5.0
+margin_right = 550.0
+margin_bottom = 25.0
+rect_scale = Vector2( 2, 2 )
+custom_colors/default_color = Color( 0, 0, 0, 1 )
+bbcode_enabled = true
+text = "Hit SPACE bar to place catcher and end trial"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Spritedot" type="Sprite" parent="."]
 position = Vector2( -100, 300 )
 scale = Vector2( 0.004, 0.024 )

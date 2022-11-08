@@ -207,6 +207,8 @@ func _process(delta):
 			draw2ndGraph = false
 			update()
 			$"RichTextLabel2".visible = false
+			$"RichTextLabel6".visible = false
+			$"RichTextLabel7".visible = false
 			$"Sprite6".visible = false
 			$"Sprite7".visible = false
 			$"Button".visible = true
@@ -227,7 +229,10 @@ func _process(delta):
 				$"SpinBox2".value +=1
 			if Input.is_action_pressed("ui_down") and $"SpinBox2".value>=1:
 				$"SpinBox2".value -=1
-			$"Sprite3".position.x =$"Sprite2".position.x + 2*startingCatcherWidth
+			if startingCatcherWidth%2 == 0:
+				$"Sprite3".position.x =$"Sprite2".position.x + 2*startingCatcherWidth
+			else:
+				$"Sprite2".position.x =$"Sprite3".position.x - 2*startingCatcherWidth
 			if Input.is_action_pressed("ui_select") and !($"Sprite3".position.x<0):
 				$"Button".visible = true
 				spawnOneCatcherLMB()
@@ -244,6 +249,8 @@ func _process(delta):
 				update()
 				spawnTen()
 				$"ItemList".visible = true
+				$"RichTextLabel8".visible = true
+				$"RichTextLabel8".text = str(caughtIn1+caughtIn2) + " * " + str(payoffTrial) + " = " + str((caughtIn1+caughtIn2)*payoffTrial)
 				$"ItemList".add_item(" ", null, false)
 				$"ItemList".add_item("Points Caught", null, false)
 				$"ItemList".add_item("Payoff Equivalent", null, false)
@@ -298,10 +305,15 @@ func _process(delta):
 			update()
 			startingCatcherWidth = int($"SpinBox2".value / 2)
 			$"RichTextLabel2".visible = true
+			$"RichTextLabel6".visible = true
+			$"RichTextLabel7".visible = true
 			$"Sprite6".visible = true
 			$"RichTextLabel2".bbcode_text = "On placing new catcher, payoff per caught point will be: [b][i]"+str(int( 1000 - sqrt(   1000000 - ( $"SpinBox2".value - sqrt((2000 * payoffTrial) - (payoffTrial * payoffTrial)) ) * ( $"SpinBox2".value - sqrt((2000 * payoffTrial) - (payoffTrial * payoffTrial)) )     ))) +"[/i][/b]"
+			$"RichTextLabel6".bbcode_text = "[b][i]"+str(int( 1000 - sqrt(   1000000 - ( $"SpinBox2".value - sqrt((2000 * payoffTrial) - (payoffTrial * payoffTrial)) ) * ( $"SpinBox2".value - sqrt((2000 * payoffTrial) - (payoffTrial * payoffTrial)) )     ))) +"[/i][/b]"
 	else:
 		$"RichTextLabel2".visible = false
+		$"RichTextLabel6".visible = false
+		$"RichTextLabel7".visible = false
 		$"Sprite6".visible = false
 
 
@@ -547,6 +559,7 @@ func spawnOneCatcherLMB():
 func _on_Button_pressed():
 	if $"Button".text == txt1 and freshPress == true:
 		$"ItemList".visible = false
+		$"RichTextLabel8".visible = false
 		$"ItemList".clear()
 		payoffTrial = 1000
 		caughtIn1 = 0
@@ -599,8 +612,44 @@ func _on_Button_pressed():
 		$"AudioStreamPlayerS".play()
 		#$"Button".text = txt1mid
 		$"Button".text = txt2
+		
+		
+		var startingCatcherWidth = (randi() % 1000) + 1
+		$"ItemList".visible = false
+		$"RichTextLabel8".visible = false
+		freshPress = false
+		draw2ndGraph = true
+		$"Sprite7".visible = true
+		update()
+		modesSaid = $"SpinBox".value
+		$"RichTextLabel4".visible = false
+		$"SpinBox".visible = false
+		# $"RichTextLabel5".visible = true # uncomment if need to use spinbox for adjusting cather width
+		$"SpinBox2".value = startingCatcherWidth
+		changeWidth = 1
+		var randPosnCatcher = (randi() % 1000) + 1
+		startingCatcherWidth = int(FULLcatArr1[FULLindexArr1[trialNum]]/2)
+		catcherCost = startingCatcherWidth
+		$"Sprite2".position.x = randPosnCatcher - startingCatcherWidth
+		$"Sprite3".position.x = randPosnCatcher + startingCatcherWidth
+		$"Sprite4".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
+		$"Sprite5".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
+		$"Sprite4".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
+		$"Sprite5".scale.x = ($"Sprite3".position.x - $"Sprite2".position.x)
+		$"Sprite2".visible = true
+		$"Sprite3".visible = true
+		$"Sprite4".visible = true
+		$"Sprite5".visible = true
+		$"Button".text = txt3
+		$"Button".visible = false # using space bar - "ui_select"
+		catcheroutside = 0 # using space bar - "ui_select"
+	
+	
+	
+	
 	if $"Button".text == txt1mid and freshPress == true:
 		$"ItemList".visible = false
+		$"RichTextLabel8".visible = false
 		freshPress = false
 		$"RichTextLabel4".visible = true
 		modesSaid = 0
@@ -610,6 +659,7 @@ func _on_Button_pressed():
 	if $"Button".text == txt2 and freshPress == true:
 		var startingCatcherWidth = (randi() % 1000) + 1
 		$"ItemList".visible = false
+		$"RichTextLabel8".visible = false
 		freshPress = false
 		draw2ndGraph = true
 		$"Sprite7".visible = true
@@ -664,6 +714,8 @@ func _on_Button_pressed():
 		spawnTen()
 		
 		$"ItemList".visible = true
+		$"RichTextLabel8".visible = true
+		$"RichTextLabel8".text = str(caughtIn1+caughtIn2) + " * " + str(payoffTrial) + " = " + str((caughtIn1+caughtIn2)*payoffTrial)
 		$"ItemList".add_item(" ", null, false)
 		$"ItemList".add_item("Points Caught", null, false)
 		$"ItemList".add_item("Payoff Equivalent", null, false)
@@ -707,6 +759,7 @@ func _on_Button_pressed():
 				$"Button".text = txt1
 	if $"Button".text == txt3mid and freshPress == true:
 		$"ItemList".visible = false
+		$"RichTextLabel8".visible = false
 		freshPress = false
 		drawGraph = true
 		draw2ndGraph = false
@@ -730,6 +783,7 @@ func _on_Button_pressed():
 		dataString.filedata = (saveOutput)
 		_make_post_request("/record_result.php", dataString)
 		$"ItemList".visible = false
+		$"RichTextLabel8".visible = false
 		freshPress = false
 		drawGraph = false
 		draw2ndGraph = false

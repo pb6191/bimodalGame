@@ -24,10 +24,10 @@ func _on_ButtonIntermed_pressed():
 	global.devArr = ["83", "28", "56"]
 	global.proArr = ["50"]
 	#global.catArr = ["332", "832"]
-	global.catArr = ["150"]
+	global.catArr = ["1", "2", "4"]
 	global.payArr = ["100"]
 	global.samArr = ["9"]
-	global.trials = [10, 10, 10, 10, 10]
+	global.trials = [2, 2, 2, 2, 2]
 	#global.trials = [5, 25, 5, 5, 5, 5]
 	get_tree().change_scene("res://Main.tscn")
 

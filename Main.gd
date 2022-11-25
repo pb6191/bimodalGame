@@ -225,14 +225,19 @@ func _process(delta):
 			if Input.is_action_pressed("ui_left"):
 				$"Sprite2".position.x -=1
 				$"Sprite3".position.x -=1
-			if Input.is_action_pressed("ui_up") and $"SpinBox2".value<=1000:
-				$"SpinBox2".value +=1
-			if Input.is_action_pressed("ui_down") and $"SpinBox2".value>=1:
-				$"SpinBox2".value -=1
-			if startingCatcherWidth%2 == 0:
-				$"Sprite3".position.x =$"Sprite2".position.x + 2*startingCatcherWidth
-			else:
-				$"Sprite2".position.x =$"Sprite3".position.x - 2*startingCatcherWidth
+			# commenting cather width change functionality
+			#if Input.is_action_pressed("ui_up") and $"SpinBox2".value<=1000:
+			#	$"SpinBox2".value +=1
+			#	if startingCatcherWidth%2 == 0:
+			#		$"Sprite3".position.x =$"Sprite2".position.x + 2*startingCatcherWidth
+			#	else:
+			#		$"Sprite2".position.x =$"Sprite3".position.x - 2*startingCatcherWidth
+			#if Input.is_action_pressed("ui_down") and $"SpinBox2".value>=1:
+			#	$"SpinBox2".value -=1
+			#	if startingCatcherWidth%2 == 0:
+			#		$"Sprite3".position.x =$"Sprite2".position.x + 2*startingCatcherWidth
+			#	else:
+			#		$"Sprite2".position.x =$"Sprite3".position.x - 2*startingCatcherWidth
 			if Input.is_action_pressed("ui_select") and !($"Sprite3".position.x<0):
 				$"Button".visible = true
 				spawnOneCatcherLMB()
@@ -488,7 +493,7 @@ func spawnOneCatcherSPACE():
 	if catchersPlaced == 1:
 		secondCatcherLeftEdge = str($"Sprite2".position.x)
 		secondCatcherRightEdge = str($"Sprite3".position.x)
-	for n1 in range($"Sprite2".position.x, $"Sprite3".position.x + 1):
+	for n1 in range($"Sprite2".position.x, $"Sprite3".position.x):
 		greenlist.append(n1)
 		if catchersPlaced == 0:
 			greenlistCatcher1.append(n1)
@@ -496,6 +501,11 @@ func spawnOneCatcherSPACE():
 			greenlistCatcher2.append(n1)
 	# payoffTrial = 1000 - greenlist.size() # linear
 	payoffTrial = int (1000 - sqrt(1000000 - ( (greenlist.size()-1000)*(greenlist.size()-1000) ) ) ) #quadratic
+	print("greenlist size"+str(greenlist.size()))
+	print("startingcatcherwidth"+str(startingCatcherWidth))
+	print("catArr"+ str(FULLcatArr1[FULLindexArr1[trialNum]]))
+	print("devArr"+str(FULLdevArr1[FULLindexArr1[trialNum]]))
+	
 	$"RichTextLabel3".text = "Current Payoff per caught point: "+str(payoffTrial)
 	if catchersPlaced == 0 and global.catchersAllowed == 2:
 		if has_node("Sprite2"):
@@ -530,14 +540,21 @@ func spawnOneCatcherLMB():
 	if catchersPlaced == 1:
 		secondCatcherLeftEdge = str($"Sprite2".position.x)
 		secondCatcherRightEdge = str($"Sprite3".position.x)
-	for n1 in range($"Sprite2".position.x, $"Sprite3".position.x + 1):
+	for n1 in range($"Sprite2".position.x, $"Sprite3".position.x):
 		greenlist.append(n1)
 		if catchersPlaced == 0:
 			greenlistCatcher1.append(n1)
 		if catchersPlaced == 1:
 			greenlistCatcher2.append(n1)
 	# payoffTrial = 1000 - greenlist.size() # linear
+	print("payoff"+str(payoffTrial))
 	payoffTrial = int (1000 - sqrt(1000000 - ( (greenlist.size()-1000)*(greenlist.size()-1000) ) ) ) #quadratic
+	print("greenlist size"+str(greenlist.size()))
+	print("startingcatcherwidth"+str(startingCatcherWidth))
+	print("catArr"+ str(FULLcatArr1[FULLindexArr1[trialNum]]))
+	print("devArr"+str(FULLdevArr1[FULLindexArr1[trialNum]]))
+	print("payoff"+str(payoffTrial))
+	
 	$"RichTextLabel3".text = "Current Payoff per caught point: "+str(payoffTrial)
 	if has_node("Sprite2"):
 		catchersp2 = $"Sprite2".duplicate()
@@ -627,10 +644,12 @@ func _on_Button_pressed():
 		# $"RichTextLabel5".visible = true # uncomment if need to use spinbox for adjusting cather width
 		$"SpinBox2".value = startingCatcherWidth
 		changeWidth = 1
-		var randPosnCatcher = (randi() % 1000) + 1
-		startingCatcherWidth = int(FULLcatArr1[FULLindexArr1[trialNum]]/2)
+		var randPosnCatcher = (randi() % 400) + 301
+		startingCatcherWidth = int(FULLcatArr1[FULLindexArr1[trialNum]]/2 * FULLdevArr1[FULLindexArr1[trialNum]])
+		$"SpinBox2".value = int(FULLcatArr1[FULLindexArr1[trialNum]] * FULLdevArr1[FULLindexArr1[trialNum]])
 		catcherCost = startingCatcherWidth
 		$"Sprite2".position.x = randPosnCatcher - startingCatcherWidth
+		print("catcherSprite2pos "+str($"Sprite2".position.x))
 		$"Sprite3".position.x = randPosnCatcher + startingCatcherWidth
 		$"Sprite4".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
 		$"Sprite5".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
@@ -677,10 +696,12 @@ func _on_Button_pressed():
 		#$"CheckBox".visible = true
 		#$"CheckBox2".visible = true
 		#$"CheckBox3".visible = true
-		var randPosnCatcher = (randi() % 1000) + 1
-		startingCatcherWidth = int(FULLcatArr1[FULLindexArr1[trialNum]]/2)
+		var randPosnCatcher = (randi() % 400) + 301
+		startingCatcherWidth = int(FULLcatArr1[FULLindexArr1[trialNum]]/2 * FULLdevArr1[FULLindexArr1[trialNum]])
+		$"SpinBox2".value = int(FULLcatArr1[FULLindexArr1[trialNum]] * FULLdevArr1[FULLindexArr1[trialNum]])
 		catcherCost = startingCatcherWidth
 		$"Sprite2".position.x = randPosnCatcher - startingCatcherWidth
+		print("catcherSprite2pos "+str($"Sprite2".position.x))
 		$"Sprite3".position.x = randPosnCatcher + startingCatcherWidth
 		$"Sprite4".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2
 		$"Sprite5".position.x = ($"Sprite3".position.x + $"Sprite2".position.x)/2

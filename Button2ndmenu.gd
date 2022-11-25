@@ -24,8 +24,8 @@ func _on_Button_pressed():
 		global.devArr = ["83", "28", "56"]
 		global.proArr = ["50"]
 		#global.catArr = ["832"]
-		global.catArr = ["150"]
+		global.catArr = ["1", "2", "4"]
 		global.payArr = ["100"]
 		global.samArr = ["9"]
-		global.trials = 50
+		global.trials = 10
 	get_tree().change_scene("res://Main.tscn")
